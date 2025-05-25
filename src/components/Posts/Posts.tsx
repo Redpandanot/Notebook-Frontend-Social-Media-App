@@ -2,6 +2,7 @@ import axios from "axios";
 import { BASE_URL } from "../../utils/constants";
 import { Post } from "../FriendAndRequest/type";
 import { useState } from "react";
+import useProfileNavigation from "../../hooks/useProfileNavigation";
 
 interface PostListProp {
   feed: Post[];
@@ -9,6 +10,7 @@ interface PostListProp {
 
 const Posts: React.FC<PostListProp> = ({ feed }) => {
   const [posts, setPosts] = useState<Post[]>(feed);
+  const { handleNavigateToProfile } = useProfileNavigation();
 
   const updateLike = async (postId: string) => {
     //may be use react query
@@ -20,7 +22,6 @@ const Posts: React.FC<PostListProp> = ({ feed }) => {
           withCredentials: true,
         }
       );
-      console.log(response.data.likeCount);
 
       setPosts((prevPosts) => {
         return prevPosts.map((post) => {
@@ -38,10 +39,16 @@ const Posts: React.FC<PostListProp> = ({ feed }) => {
   return (
     <>
       {posts.map((post) => (
-        <div key={post._id} className="card bg-base-100 w-5/12 shadow-sm mb-5">
-          <div className="avatar">
+        <div
+          key={post._id}
+          className="card bg-base-100 w-10/12 md:w-5/12 shadow-sm mb-5"
+        >
+          <div
+            className="avatar cursor-pointer"
+            onClick={() => handleNavigateToProfile(post.userId._id)}
+          >
             <div className="ring-primary ring-offset-base-100 w-6 m-3 rounded-full ring-2 ring-offset-2">
-              <img src="https://img.daisyui.com/images/profile/demo/spiderperson@192.webp" />
+              <img src={post.userId.photo.url} />
             </div>
             <h2 className="card-title">
               {post.userId.firstName} {post.userId.lastName}
@@ -66,7 +73,6 @@ const Posts: React.FC<PostListProp> = ({ feed }) => {
               <button className="btn btn-primary">
                 Comment {post.commentCount}
               </button>
-              <button className="btn btn-primary">Share</button>
             </div>
           </div>
         </div>
