@@ -64,8 +64,8 @@ const Navbar = () => {
     }
   }, [profile, dispatch]);
   return (
-    <div className="navbar bg-base-100 shadow-sm">
-      <div className="flex-none">
+    <div className="navbar bg-base-100 shadow-sm justify-center">
+      <div className="absolute left-0">
         <button className="btn btn-square btn-ghost">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -83,10 +83,13 @@ const Navbar = () => {
           </svg>
         </button>
       </div>
-      <div className="mr-96" onClick={() => navigate("/")}>
+      <div
+        className="absolute left-10 hidden md:block"
+        onClick={() => navigate("/")}
+      >
         <a className="btn btn-ghost text-xl">Notebook</a>
       </div>
-      <div className=" border-2 rounded-2xl w-96">
+      <div className=" border-2 rounded-2xl w-60">
         <label className="input">
           <svg
             className="h-[1em] opacity-50"
@@ -114,7 +117,7 @@ const Navbar = () => {
           />
         </label>
         {display && search !== "" && results.length !== 0 && (
-          <ul className="list rounded-box shadow-md z-10 absolute bg-amber-50 w-80">
+          <ul className="list rounded-box shadow-md z-10 absolute bg-amber-50 w-60">
             <li className="p-4 pb-2 text-xs opacity-60 tracking-wide">Users</li>
             {results.map((item) => {
               return (

@@ -2,6 +2,7 @@ export interface User {
   _id: string;
   firstName: string;
   lastName?: string;
+  photo: PhotoObject;
 }
 
 export interface FriendRequest {
@@ -28,7 +29,7 @@ export interface CardDetail {
 
 export interface Post {
   _id: string;
-  userId: PostUser;
+  userId: User;
   title: string;
   description: string;
   likeCount: number;
@@ -38,8 +39,6 @@ export interface Post {
   __v: number;
 }
 
-export interface PostUser {
-  _id: string;
-  firstName: string;
-  lastName?: string;
+export interface PhotoObject {
+  url: string;
 }
