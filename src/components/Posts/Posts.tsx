@@ -41,7 +41,7 @@ const Posts: React.FC<PostListProp> = ({ feed }) => {
       {posts.map((post) => (
         <div
           key={post._id}
-          className="card bg-base-100 w-10/12 md:w-5/12 shadow-sm mb-5"
+          className="card bg-base-100 md:w-6/12 xl:w-5/12 sm:w-10/12 shadow-sm mb-5"
         >
           <div
             className="avatar cursor-pointer"
@@ -54,12 +54,11 @@ const Posts: React.FC<PostListProp> = ({ feed }) => {
               {post.userId.firstName} {post.userId.lastName}
             </h2>
           </div>
-          <figure>
-            <img
-              src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-              alt="Shoes"
-            />
-          </figure>
+          {post.photo && post.photo.url && (
+            <figure className="p-2">
+              <img src={post.photo.url} alt="user posts" />
+            </figure>
+          )}
           <div className="card-body" key={post._id}>
             <h2 className="card-title">{post.title}</h2>
             <p>{post.description}</p>

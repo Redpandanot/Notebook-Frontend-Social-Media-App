@@ -7,8 +7,8 @@ interface FriendsListProps {
 
 const FriendsList: React.FC<FriendsListProps> = ({ friends }) => {
   return (
-    <div className="mb-10">
-      <h1>Friends</h1>
+    <div className="mb-10 flex flex-col items-center">
+      <h1 className="text font-bold mb-1">Friends</h1>
       {friends.map((friend) => {
         return (
           <div
