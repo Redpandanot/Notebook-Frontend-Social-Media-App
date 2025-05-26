@@ -54,8 +54,8 @@ const NewFriends = () => {
   };
 
   return (
-    <>
-      <h1>Find New Friends</h1>
+    <div className="flex flex-col items-center">
+      <h1 className="text font-bold mb-1">Find New Friends</h1>
       {newRequests.length !== 0 ? (
         newRequests.map((request) => {
           return (
@@ -72,7 +72,7 @@ const NewFriends = () => {
                 <div className="flex gap-5">
                   <div className="card-actions">
                     <button
-                      className="btn btn-primary"
+                      className="btn btn-primary bg-blue-500"
                       onClick={() => handleConnect(request._id)}
                     >
                       Connect
@@ -94,7 +94,7 @@ const NewFriends = () => {
       ) : (
         <div>No new requests available</div>
       )}
-    </>
+    </div>
   );
 };
 

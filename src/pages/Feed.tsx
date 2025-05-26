@@ -9,7 +9,7 @@ import { BASE_URL } from "../utils/constants";
 import axios from "axios";
 import { useAppSelector } from "../store/hooks";
 import { FriendsDetails } from "../components/FriendAndRequest/type";
-import UploadImages from "../components/UploadImages/UploadImages";
+import CreatePost from "../components/CreatePost";
 
 const Feed = () => {
   const [postLoading, setPostLoading] = useState<boolean>(true);
@@ -17,6 +17,7 @@ const Feed = () => {
   const [friendsList, setFriendsList] = useState<FriendsDetails[]>([]);
   const feed = useAppSelector((state) => state.feed.posts);
   const dispatch = useDispatch();
+  const [createPost, setCreatePost] = useState<boolean>(false);
 
   const postFetch = useCallback(async () => {
     try {
@@ -51,15 +52,26 @@ const Feed = () => {
     }
   }, [setFriendsListLoading]);
 
-  const handleCreatePost = async (file: File | null) => {
-    if (!file) return;
+  const handleCreatePost = async (
+    files: File[] | null,
+    title: string,
+    description: string
+  ) => {
+    if (!title || !description) return;
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("title", title);
+    formData.append("description", description);
+
+    if (files) {
+      files.forEach((file) => {
+        formData.append("files", file);
+      });
+    }
     try {
-      const response = await axios.post(BASE_URL + "/post/create", formData, {
+      await axios.post(BASE_URL + "/post/create", formData, {
         withCredentials: true,
       });
-      console.log(response.data);
+      setCreatePost(false);
     } catch (error) {
       window.alert(error);
     }
@@ -71,18 +83,28 @@ const Feed = () => {
 
   return (
     <div className="flex flex-col">
-      <div className="absolute left-0 mt-3 ml-10 hidden md:block">
+      <div className="absolute left-0 mt-3 ml-10 hidden xl:block">
         {!friendsListLoading && <FriendsList friends={friendsList} />}
       </div>
-      <div className="flex flex-col justify-center items-center mt-3">
-        <UploadImages handleImage={handleCreatePost} />
+      <div className="flex flex-col items-center mt-5">
+        <div className="flex flex-col items-center w-full">
+          {createPost && <CreatePost handleImage={handleCreatePost} />}
+        </div>
+        <button
+          className={`btn btn-primary mb-5 w-10/12 md:w-5/12 rounded-xl ${
+            createPost ? "bg-red-500" : "bg-blue-500"
+          }`}
+          onClick={() => setCreatePost(!createPost)}
+        >
+          {createPost ? "Cancel" : "Create Post"}
+        </button>
         {!postLoading ? (
           <Posts feed={feed} />
         ) : (
           <span className="loading loading-ring loading-xl"></span>
         )}
       </div>
-      <div className="absolute right-0 mt-3 mr-10 hidden md:block">
+      <div className="absolute right-0 mt-3 mr-10 hidden xl:block">
         <RequestList />
         <NewFriends />
       </div>

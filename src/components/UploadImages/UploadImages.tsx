@@ -1,7 +1,7 @@
 import { ChangeEvent, useState } from "react";
 
 type UploadImagesProps = {
-  handleImage: (images: File | null) => void; // A function that takes an array of File objects
+  handleImage: (images: File | null) => void;
 };
 
 const UploadImages = ({ handleImage }: UploadImagesProps) => {

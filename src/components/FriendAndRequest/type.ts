@@ -32,6 +32,7 @@ export interface Post {
   userId: User;
   title: string;
   description: string;
+  photo: PhotoObject;
   likeCount: number;
   commentCount: number;
   createdAt: string;

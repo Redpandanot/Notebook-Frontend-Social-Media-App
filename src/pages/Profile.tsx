@@ -13,6 +13,7 @@ interface ProfileDetailProps {
 const Profile: React.FC<ProfileDetailProps> = ({ profile }) => {
   const location = useLocation();
   const [postLoading, setPostLoading] = useState<boolean>(true);
+  const [editProfile, setEditProfile] = useState<boolean>(false);
   const [posts, setPosts] = useState([]);
   const user =
     location.state && location.state.profile ? location.state.profile : profile;
@@ -57,6 +58,8 @@ const Profile: React.FC<ProfileDetailProps> = ({ profile }) => {
     if (location.state && location.state.profile) {
       postFetch(location.state.profile._id);
     } else postFetch(profile._id);
+
+    return () => setPosts([]);
   }, [postFetch, location, profile]);
 
   return (
@@ -72,8 +75,18 @@ const Profile: React.FC<ProfileDetailProps> = ({ profile }) => {
                   className="rounded-xl"
                 />
               </figure>
-              <UploadImages handleImage={handleUpdateProfileImage} />
-              <div className="card-body items-center text-center">
+              {editProfile && (
+                <UploadImages handleImage={handleUpdateProfileImage} />
+              )}
+              {user._id === profile._id && (
+                <button
+                  className="btn btn-primary mt-3 w-40 m-auto"
+                  onClick={() => setEditProfile(!editProfile)}
+                >
+                  {editProfile ? "Cancel" : "Edit Profile Image"}
+                </button>
+              )}
+              <div className="card-body items-start text-center">
                 <h2 className="card-title mb-2">
                   {user.firstName} {user.lastName}
                 </h2>
@@ -129,6 +142,9 @@ const Profile: React.FC<ProfileDetailProps> = ({ profile }) => {
       </div>
       <div className="flex flex-col justify-center items-center">
         <h1 className="bg-blue-400 w-10/12 md:w-5/12 mt-5 p-5 mb-2">Posts</h1>
+        {postLoading ? (
+          <span className="loading loading-ring loading-xl m-auto"></span>
+        ) : null}
         {posts.length !== 0 && <Posts feed={posts} />}
       </div>
     </div>

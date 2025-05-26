@@ -41,7 +41,6 @@ const Navbar = () => {
       );
       setResults(response.data);
       setLoading(false);
-      console.log(response.data);
     } catch (error) {
       setLoading(false);
       window.alert(error);
@@ -116,36 +115,40 @@ const Navbar = () => {
             onBlur={() => setDisplay(false)}
           />
         </label>
-        {display && search !== "" && results.length !== 0 && (
+        {display && search !== "" && (
           <ul className="list rounded-box shadow-md z-10 absolute bg-amber-50 w-60">
-            <li className="p-4 pb-2 text-xs opacity-60 tracking-wide">Users</li>
-            {results.map((item) => {
-              return (
-                <li className="list-row" key={item._id}>
-                  {/* <div>
+            {/* <li className="p-4 pb-2 text-xs opacity-60 tracking-wide">Users</li> */}
+            {loading ? (
+              <span className="loading loading-ring loading-xl m-auto"></span>
+            ) : (
+              results.map((item) => {
+                return (
+                  <li className="list-row" key={item._id}>
+                    {/* <div>
                       <img
                         className="size-10 rounded-box"
                         src="https://img.daisyui.com/images/profile/demo/4@94.webp"
                       />
                     </div> */}
-                  <div>
-                    <div
-                      className=" cursor-pointer"
-                      onClick={() => {
-                        setDisplay(false);
-                        handleNavigateToProfile(item._id);
-                      }}
-                      onMouseDown={(e) => e.preventDefault()}
-                    >
-                      {item.firstName} {item.lastName}
-                    </div>
-                    {/* <div className="text-xs uppercase font-semibold opacity-60">
+                    <div>
+                      <div
+                        className=" cursor-pointer"
+                        onClick={() => {
+                          setDisplay(false);
+                          handleNavigateToProfile(item._id);
+                        }}
+                        onMouseDown={(e) => e.preventDefault()}
+                      >
+                        {item.firstName} {item.lastName}
+                      </div>
+                      {/* <div className="text-xs uppercase font-semibold opacity-60">
                         Bears of a fever
                       </div> */}
-                  </div>
-                </li>
-              );
-            })}
+                    </div>
+                  </li>
+                );
+              })
+            )}
           </ul>
         )}
       </div>
@@ -165,7 +168,6 @@ const Navbar = () => {
             className="menu menu-sm dropdown-content rounded-box z-1 mt-3 w-52 p-2 shadow hover:cursor-pointer bg-amber-50"
           >
             <li onClick={() => navigate("/profile")}>Profile</li>
-            <li>Settings</li>
             <li onClick={handleLogout}>Logout</li>
           </ul>
         </div>
