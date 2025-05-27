@@ -53,7 +53,7 @@ const Feed = () => {
   }, [setFriendsListLoading]);
 
   const handleCreatePost = async (
-    files: File[] | null,
+    files: File[],
     title: string,
     description: string
   ) => {
@@ -62,7 +62,7 @@ const Feed = () => {
     formData.append("title", title);
     formData.append("description", description);
 
-    if (files) {
+    if (files.length > 0) {
       files.forEach((file) => {
         formData.append("files", file);
       });
