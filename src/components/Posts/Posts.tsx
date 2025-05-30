@@ -3,6 +3,8 @@ import { BASE_URL } from "../../utils/constants";
 import { Post } from "../FriendAndRequest/type";
 import { useState } from "react";
 import useProfileNavigation from "../../hooks/useProfileNavigation";
+import Carousel from "../Carousel";
+import { useNavigate } from "react-router-dom";
 
 interface PostListProp {
   feed: Post[];
@@ -11,6 +13,7 @@ interface PostListProp {
 const Posts: React.FC<PostListProp> = ({ feed }) => {
   const [posts, setPosts] = useState<Post[]>(feed);
   const { handleNavigateToProfile } = useProfileNavigation();
+  const navigate = useNavigate();
 
   const updateLike = async (postId: string) => {
     //may be use react query
@@ -41,7 +44,7 @@ const Posts: React.FC<PostListProp> = ({ feed }) => {
       {posts.map((post) => (
         <div
           key={post._id}
-          className="card bg-base-100 md:w-6/12 xl:w-5/12 sm:w-10/12 shadow-sm mb-5"
+          className="card bg-base-100 sm:w-[600px] w-full shadow-sm mb-5"
         >
           <div
             className="avatar cursor-pointer"
@@ -54,22 +57,25 @@ const Posts: React.FC<PostListProp> = ({ feed }) => {
               {post.userId.firstName} {post.userId.lastName}
             </h2>
           </div>
-          {post.photo && post.photo.url && (
-            <figure className="p-2">
-              <img src={post.photo.url} alt="user posts" />
-            </figure>
-          )}
+          <div className="flex justify-center relative">
+            {post.photos && post.photos.length > 0 && (
+              <Carousel photos={post.photos} />
+            )}
+          </div>
           <div className="card-body" key={post._id}>
             <h2 className="card-title">{post.title}</h2>
             <p>{post.description}</p>
-            <div className="card-actions justify-end">
+            <div className="card-actions justify-start">
               <button
                 className="btn btn-primary"
                 onClick={() => updateLike(post._id)}
               >
                 {post.likeCount} {post.likeCount > 1 ? "Likes" : "Like"}
               </button>
-              <button className="btn btn-primary">
+              <button
+                className="btn btn-primary"
+                onClick={() => navigate("/postDiscussion")}
+              >
                 Comment {post.commentCount}
               </button>
             </div>

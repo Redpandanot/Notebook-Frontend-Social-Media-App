@@ -14,6 +14,11 @@ const CreatePost = ({ handleImage }: UploadImagesProps) => {
     if (e.target.files && e.target.files.length > 0) {
       const newlySelectedFiles = Array.from(e.target.files);
 
+      if (file.length + newlySelectedFiles.length > 5) {
+        window.alert("Cannot upload more than 5 images");
+        return;
+      }
+
       setFile((prevFiles) => [...prevFiles, ...newlySelectedFiles]);
 
       const newImagePreviewUrls: string[] = [];
@@ -57,7 +62,7 @@ const CreatePost = ({ handleImage }: UploadImagesProps) => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center mt-3 mb-2 p-3 w-10/12 md:w-5/12 border-2 rounded">
+    <div className="flex flex-col justify-center items-center mt-3 mb-2 p-3 sm:w-[600px] w-full border-2 rounded">
       <fieldset className="fieldset">
         <legend className="fieldset-legend">
           Pick an image<label className="label">(Optional)</label>
