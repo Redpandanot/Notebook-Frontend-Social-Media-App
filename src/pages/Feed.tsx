@@ -91,7 +91,7 @@ const Feed = () => {
           {createPost && <CreatePost handleImage={handleCreatePost} />}
         </div>
         <button
-          className={`btn btn-primary mb-5 w-10/12 md:w-5/12 rounded-xl ${
+          className={`btn btn-primary mb-5 sm:w-[600px] rounded-xl ${
             createPost ? "bg-red-500" : "bg-blue-500"
           }`}
           onClick={() => setCreatePost(!createPost)}

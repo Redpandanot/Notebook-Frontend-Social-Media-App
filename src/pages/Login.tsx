@@ -10,9 +10,6 @@ import { addUser } from "../store/slices/profileSlice.ts";
 const Login = () => {
   const [emailId, setEmailId] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  // const [loading, setLoading] = useState<boolean>(true);
-  // const profile = useAppSelector((store) => store.profile);
-  // const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
