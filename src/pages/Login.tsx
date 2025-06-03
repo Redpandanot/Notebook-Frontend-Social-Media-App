@@ -33,21 +33,6 @@ const Login = () => {
       window.alert("Login Failed");
     }
   };
-  // const fetch = useCallback(async () => {
-  //   const result = await checkAndFetchProfile(
-  //     profile,
-  //     setLoading,
-  //     dispatch,
-  //     getProfile
-  //   );
-  //   if (result) {
-  //     navigate("/");
-  //   }
-  // }, [profile, dispatch, navigate]);
-
-  // useEffect(() => {
-  //   fetch();
-  // }, [fetch]);
 
   return (
     <div className="flex justify-center items-center mt-24">

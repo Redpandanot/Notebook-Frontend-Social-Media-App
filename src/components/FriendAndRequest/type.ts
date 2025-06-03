@@ -37,9 +37,20 @@ export interface Post {
   commentCount: number;
   createdAt: string;
   updatedAt: string;
-  __v: number;
 }
 
 export interface PhotoObject {
   url: string;
+}
+
+export interface Comments {
+  _id: string;
+  postId: string;
+  userId: User;
+  comment: string;
+  likeCount: number;
+  replyCount: number;
+  createdAt: string;
+  updatedAt: string;
+  replies: Comments[];
 }
