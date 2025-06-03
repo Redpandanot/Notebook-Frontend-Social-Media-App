@@ -8,9 +8,10 @@ import { useNavigate } from "react-router-dom";
 
 interface PostListProp {
   feed: Post[];
+  isCommentDisplayed?: boolean;
 }
 
-const Posts: React.FC<PostListProp> = ({ feed }) => {
+const Posts: React.FC<PostListProp> = ({ feed, isCommentDisplayed = true }) => {
   const [posts, setPosts] = useState<Post[]>(feed);
   const { handleNavigateToProfile } = useProfileNavigation();
   const navigate = useNavigate();
@@ -37,6 +38,10 @@ const Posts: React.FC<PostListProp> = ({ feed }) => {
     } catch (error) {
       window.alert("like unsuccessfull" + error);
     }
+  };
+
+  const handleCommentClicked = (post: Post) => {
+    navigate("/postDiscussion/" + post._id);
   };
 
   return (
@@ -72,12 +77,14 @@ const Posts: React.FC<PostListProp> = ({ feed }) => {
               >
                 {post.likeCount} {post.likeCount > 1 ? "Likes" : "Like"}
               </button>
-              <button
-                className="btn btn-primary"
-                onClick={() => navigate("/postDiscussion")}
-              >
-                Comment {post.commentCount}
-              </button>
+              {isCommentDisplayed && (
+                <button
+                  className="btn btn-primary"
+                  onClick={() => handleCommentClicked(post)}
+                >
+                  Comment {post.commentCount}
+                </button>
+              )}
             </div>
           </div>
         </div>
