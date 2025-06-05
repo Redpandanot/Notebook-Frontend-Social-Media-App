@@ -1,22 +1,20 @@
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Posts from "../components/Posts/Posts";
 import { useCallback, useEffect, useState } from "react";
 import { BASE_URL } from "../utils/constants";
 import axios from "axios";
-import { ProfileDetail } from "./types";
 import UploadImages from "../components/UploadImages/UploadImages";
+import { handleVisitProfile } from "../utils/handleVisitProfile";
+import { ProfileDetail } from "../components/FriendAndRequest/type";
+import { useAppSelector } from "../store/hooks";
 
-interface ProfileDetailProps {
-  profile: ProfileDetail;
-}
-
-const Profile: React.FC<ProfileDetailProps> = ({ profile }) => {
-  const location = useLocation();
+const Profile = () => {
+  const { userId } = useParams();
+  const profile = useAppSelector((state) => state.profile);
   const [postLoading, setPostLoading] = useState<boolean>(true);
   const [editProfile, setEditProfile] = useState<boolean>(false);
+  const [user, setUser] = useState<ProfileDetail | null>(null);
   const [posts, setPosts] = useState([]);
-  const user =
-    location.state && location.state.profile ? location.state.profile : profile;
 
   const postFetch = useCallback(
     async (profileId: string) => {
@@ -35,6 +33,11 @@ const Profile: React.FC<ProfileDetailProps> = ({ profile }) => {
     },
     [setPostLoading]
   );
+
+  const profileFetch = useCallback(async (userId: string) => {
+    const response = await handleVisitProfile(userId);
+    setUser(response.data);
+  }, []);
 
   const handleUpdateProfileImage = async (file: File | null) => {
     if (!file) return;
@@ -55,12 +58,28 @@ const Profile: React.FC<ProfileDetailProps> = ({ profile }) => {
   };
 
   useEffect(() => {
-    if (location.state && location.state.profile) {
-      postFetch(location.state.profile._id);
-    } else postFetch(profile._id);
+    if (userId) {
+      profileFetch(userId);
+      postFetch(userId);
+    } else {
+      if (profile) postFetch(profile._id);
+    }
 
     return () => setPosts([]);
-  }, [postFetch, location, profile]);
+  }, [postFetch, profile, userId, profileFetch]);
+
+  if (!user) {
+    return (
+      <div className="flex justify-center items-center mt-40 bg-white">
+        <div className="flex flex-col gap-4 w-96 h-96 rounded-xl p-6 shadow-lg bg-gray-50">
+          <div className="skeleton h-32 w-full bg-gray-200 rounded-md"></div>
+          <div className="skeleton h-4 w-28 bg-gray-200 rounded-md"></div>
+          <div className="skeleton h-4 w-full bg-gray-200 rounded-md"></div>
+          <div className="skeleton h-4 w-full bg-gray-200 rounded-md"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col justify-center w-full">
@@ -78,7 +97,7 @@ const Profile: React.FC<ProfileDetailProps> = ({ profile }) => {
               {editProfile && (
                 <UploadImages handleImage={handleUpdateProfileImage} />
               )}
-              {user._id === profile._id && (
+              {profile && user._id === profile._id && (
                 <button
                   className="btn btn-primary mt-3 w-40 m-auto"
                   onClick={() => setEditProfile(!editProfile)}
@@ -103,31 +122,34 @@ const Profile: React.FC<ProfileDetailProps> = ({ profile }) => {
                     <strong>Gender:</strong> {user.gender}
                   </p>
                 )}
-                {user.about && (
-                  <div className="mt-4 text-left w-full">
-                    <h3 className="text-md font-semibold mb-1">About:</h3>
-                    <p className="text-sm text-gray-600">{user.about}</p>
-                  </div>
-                )}
-                {user.skills && user.skills.length > 0 && (
-                  <div className="mt-4 text-left w-full">
-                    <h3 className="text-md font-semibold mb-1">Skills:</h3>
-                    <p className="text-sm text-gray-600">
-                      {user.skills.join(", ")}
-                    </p>{" "}
-                  </div>
-                )}
-                {user.createdAt && (
-                  <p className="text-xs text-gray-500 mt-4">
-                    Joined: {new Date(user.createdAt).toLocaleDateString()}{" "}
+                <div className="mt-4 text-left w-full">
+                  <h3 className="text-md font-semibold mb-1">
+                    College/University:
+                  </h3>
+                  <p className="text-sm text-gray-600">
+                    {user.college ? user.college : "Not Entered"}
                   </p>
-                )}
-                {user.updatedAt && (
-                  <p className="text-xs text-gray-500">
-                    Last Updated:{" "}
-                    {new Date(user.updatedAt).toLocaleDateString()}{" "}
+                </div>
+                <div className="mt-4 text-left w-full">
+                  <h3 className="text-md font-semibold mb-1">About:</h3>
+                  <p className="text-sm text-gray-600">
+                    {user.about ? user.about : "Not Entered"}
                   </p>
-                )}
+                </div>
+                <div className="mt-4 text-left w-full">
+                  <h3 className="text-md font-semibold mb-1">Skills:</h3>
+                  <p className="text-sm text-gray-600">
+                    {user.skills.length > 0
+                      ? user.skills.join(", ")
+                      : "Not Entered"}
+                  </p>
+                </div>
+                <p className="text-xs text-gray-500 mt-4">
+                  Joined: {new Date(user.createdAt).toLocaleDateString()}
+                </p>
+                <p className="text-xs text-gray-500">
+                  Last Updated: {new Date(user.updatedAt).toLocaleDateString()}
+                </p>
               </div>
             </div>
           </div>

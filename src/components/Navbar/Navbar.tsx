@@ -4,8 +4,8 @@ import { getProfile, removeUser } from "../../store/slices/profileSlice";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
-import { ProfileDetail } from "../../pages/types";
 import useProfileNavigation from "../../hooks/useProfileNavigation";
+import { ProfileDetail } from "../FriendAndRequest/type";
 
 const Navbar = () => {
   const [search, setSearch] = useState<string>("");
@@ -167,7 +167,7 @@ const Navbar = () => {
             tabIndex={0}
             className="menu menu-sm dropdown-content rounded-box z-1 mt-3 w-52 p-2 shadow hover:cursor-pointer bg-amber-50"
           >
-            <li onClick={() => navigate("/profile")}>Profile</li>
+            <li onClick={() => navigate("/profile/" + profile._id)}>Profile</li>
             <li onClick={handleLogout}>Logout</li>
           </ul>
         </div>
