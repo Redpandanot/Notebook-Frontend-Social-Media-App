@@ -54,3 +54,18 @@ export interface Comments {
   updatedAt: string;
   replies: Comments[];
 }
+
+export interface ProfileDetail {
+  _id: string;
+  firstName: string;
+  lastName?: string;
+  emailId: string;
+  age: string;
+  gender: string;
+  college: string;
+  photo: PhotoObject;
+  about: string;
+  skills: [];
+  createdAt: string;
+  updatedAt: string;
+}

@@ -2,7 +2,6 @@ import axios from "axios";
 import { BASE_URL } from "../../utils/constants";
 import { Post } from "../FriendAndRequest/type";
 import { useState } from "react";
-import useProfileNavigation from "../../hooks/useProfileNavigation";
 import Carousel from "../Carousel";
 import { useNavigate } from "react-router-dom";
 
@@ -13,7 +12,6 @@ interface PostListProp {
 
 const Posts: React.FC<PostListProp> = ({ feed, isCommentDisplayed = true }) => {
   const [posts, setPosts] = useState<Post[]>(feed);
-  const { handleNavigateToProfile } = useProfileNavigation();
   const navigate = useNavigate();
 
   const updateLike = async (postId: string) => {
@@ -53,7 +51,7 @@ const Posts: React.FC<PostListProp> = ({ feed, isCommentDisplayed = true }) => {
         >
           <div
             className="avatar cursor-pointer"
-            onClick={() => handleNavigateToProfile(post.userId._id)}
+            onClick={() => navigate("/profile/" + post.userId._id)}
           >
             <div className="ring-primary ring-offset-base-100 w-6 m-3 rounded-full ring-2 ring-offset-2">
               <img src={post.userId.photo.url} />
