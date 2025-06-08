@@ -1,6 +1,7 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { BASE_URL } from "../../utils/constants";
+import { ProfileDetail } from "../../components/FriendAndRequest/type";
 
 export const getProfile = createAsyncThunk(
   "profile/view",
@@ -18,9 +19,9 @@ export const getProfile = createAsyncThunk(
 
 export const profileSlice = createSlice({
   name: "profile",
-  initialState: null,
+  initialState: null as ProfileDetail | null,
   reducers: {
-    addUser: (_, action) => {
+    addUser: (_, action: PayloadAction<ProfileDetail>) => {
       return action.payload;
     },
     removeUser: () => {

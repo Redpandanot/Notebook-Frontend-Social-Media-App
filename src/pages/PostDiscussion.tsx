@@ -8,6 +8,7 @@ import {
   Post,
 } from "../components/FriendAndRequest/type";
 import Comments from "../components/Comments";
+import ProfilePostSkeleton from "../components/Skeleton/ProfilePostSkeleton";
 
 const PostDiscussion = () => {
   const { postId } = useParams();
@@ -67,10 +68,14 @@ const PostDiscussion = () => {
     }
   }, [fetchDiscussion, postId]);
 
+  if (!post) {
+    return <ProfilePostSkeleton />;
+  }
+
   return (
     <div className="flex flex-col items-center">
       <div className="">
-        {post && <Posts feed={[post]} isCommentDisplayed={false} />}
+        <Posts feed={[post]} isCommentDisplayed={false} />
       </div>
       <div className="sm:w-[800px] w-full">
         <div className="border-2 p-5">
