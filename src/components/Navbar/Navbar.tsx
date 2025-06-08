@@ -7,7 +7,11 @@ import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import useProfileNavigation from "../../hooks/useProfileNavigation";
 import { ProfileDetail } from "../FriendAndRequest/type";
 
-const Navbar = () => {
+interface NavbarPropType {
+  handleSidebarClicked: () => void;
+}
+
+const Navbar = ({ handleSidebarClicked }: NavbarPropType) => {
   const [search, setSearch] = useState<string>("");
   const [results, setResults] = useState<ProfileDetail[]>([]);
   const [display, setDisplay] = useState<boolean>(false);
@@ -62,10 +66,14 @@ const Navbar = () => {
       dispatch(getProfile());
     }
   }, [profile, dispatch]);
+
   return (
     <div className="navbar bg-base-100 shadow-sm justify-center">
       <div className="absolute left-0">
-        <button className="btn btn-square btn-ghost">
+        <button
+          className="btn btn-square btn-ghost"
+          onClick={handleSidebarClicked}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

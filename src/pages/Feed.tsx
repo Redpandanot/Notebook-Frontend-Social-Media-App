@@ -10,6 +10,7 @@ import axios from "axios";
 import { useAppSelector } from "../store/hooks";
 import { FriendsDetails } from "../components/FriendAndRequest/type";
 import CreatePost from "../components/CreatePost";
+import ProfilePostSkeleton from "../components/Skeleton/ProfilePostSkeleton";
 
 const Feed = () => {
   const [postLoading, setPostLoading] = useState<boolean>(true);
@@ -81,12 +82,16 @@ const Feed = () => {
     friendsListFetch();
   }, [friendsListFetch]);
 
+  if (postLoading) {
+    return <ProfilePostSkeleton />;
+  }
+
   return (
-    <div className="flex flex-col">
-      <div className="absolute left-0 mt-3 ml-10 hidden xl:block">
+    <div className=" flex justify-evenly">
+      <div className=" hidden xl:block">
         {!friendsListLoading && <FriendsList friends={friendsList} />}
       </div>
-      <div className="flex flex-col items-center mt-5">
+      <div className="">
         <div className="flex flex-col items-center w-full">
           {createPost && <CreatePost handleImage={handleCreatePost} />}
         </div>
@@ -98,13 +103,9 @@ const Feed = () => {
         >
           {createPost ? "Cancel" : "Create Post"}
         </button>
-        {!postLoading ? (
-          <Posts feed={feed} />
-        ) : (
-          <span className="loading loading-ring loading-xl"></span>
-        )}
+        <Posts feed={feed} />
       </div>
-      <div className="absolute right-0 mt-3 mr-10 hidden xl:block">
+      <div className=" hidden xl:block">
         <RequestList />
         <NewFriends />
       </div>
