@@ -21,7 +21,6 @@ const Profile = () => {
     async (profileId: string) => {
       try {
         setPostLoading(true);
-        console.log(profileId);
         const result = await axios.get(BASE_URL + "/posts/view/" + profileId, {
           withCredentials: true,
         });
@@ -76,91 +75,95 @@ const Profile = () => {
   return (
     <div className="flex flex-col justify-center w-full">
       <div>
-        {user && (
-          <div className="flex justify-center mt-5">
-            <div className="card bg-base-100 w-96 shadow-sm">
-              <figure className="px-10 pt-10">
-                <img
-                  src={user.photo.url}
-                  alt="Profile Avatar"
-                  className="rounded-xl"
-                />
-              </figure>
-              {editProfile && (
-                <UploadImages handleImage={handleUpdateProfileImage} />
-              )}
-              {profile && user._id === profile._id && (
-                <button
-                  className="btn btn-primary mt-3 w-40 m-auto"
-                  onClick={() => setEditProfile(!editProfile)}
-                >
-                  {editProfile ? "Cancel" : "Edit Profile Image"}
-                </button>
-              )}
-              <div className="card-body items-start text-center">
-                <h2 className="card-title mb-2">
-                  {user.firstName} {user.lastName}
-                </h2>
-                <p className="text-sm text-gray-700">
-                  <strong>Email:</strong> {user.emailId}
-                </p>
-                {user.age !== undefined && user.age !== null && (
-                  <p className="text-sm text-gray-700">
-                    <strong>Age:</strong> {user.age}
-                  </p>
+        <div>
+          {user && (
+            <div className="flex justify-center mt-5">
+              <div className="card bg-base-100 w-96 shadow-sm">
+                <figure className="px-10 pt-10">
+                  <img
+                    src={user.photo.url}
+                    alt="Profile Avatar"
+                    className="rounded-xl"
+                  />
+                </figure>
+                {editProfile && (
+                  <UploadImages handleImage={handleUpdateProfileImage} />
                 )}
-                {user.gender && (
-                  <p className="text-sm text-gray-700">
-                    <strong>Gender:</strong> {user.gender}
-                  </p>
+                {profile && user._id === profile._id && (
+                  <button
+                    className="btn btn-primary mt-3 w-40 m-auto"
+                    onClick={() => setEditProfile(!editProfile)}
+                  >
+                    {editProfile ? "Cancel" : "Edit Profile Image"}
+                  </button>
                 )}
-                <div className="mt-4 text-left w-full">
-                  <h3 className="text-md font-semibold mb-1">
-                    College/University:
-                  </h3>
-                  <p className="text-sm text-gray-600">
-                    {user.college ? user.college : "Not Entered"}
+                <div className="card-body items-start text-center">
+                  <h2 className="card-title mb-2">
+                    {user.firstName} {user.lastName}
+                  </h2>
+                  <p className="text-sm text-gray-700">
+                    <strong>Email:</strong> {user.emailId}
+                  </p>
+                  {user.age !== undefined && user.age !== null && (
+                    <p className="text-sm text-gray-700">
+                      <strong>Age:</strong> {user.age}
+                    </p>
+                  )}
+                  {user.gender && (
+                    <p className="text-sm text-gray-700">
+                      <strong>Gender:</strong> {user.gender}
+                    </p>
+                  )}
+                  <div className="mt-4 text-left w-full">
+                    <h3 className="text-md font-semibold mb-1">
+                      College/University:
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      {user.college ? user.college : "Not Entered"}
+                    </p>
+                  </div>
+                  <div className="mt-4 text-left w-full">
+                    <h3 className="text-md font-semibold mb-1">About:</h3>
+                    <p className="text-sm text-gray-600">
+                      {user.about ? user.about : "Not Entered"}
+                    </p>
+                  </div>
+                  <div className="mt-4 text-left w-full">
+                    <h3 className="text-md font-semibold mb-1">Skills:</h3>
+                    <p className="text-sm text-gray-600">
+                      {user.skills.length > 0
+                        ? user.skills.join(", ")
+                        : "Not Entered"}
+                    </p>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-4">
+                    Joined: {new Date(user.createdAt).toLocaleDateString()}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    Last Updated:{" "}
+                    {new Date(user.updatedAt).toLocaleDateString()}
                   </p>
                 </div>
-                <div className="mt-4 text-left w-full">
-                  <h3 className="text-md font-semibold mb-1">About:</h3>
-                  <p className="text-sm text-gray-600">
-                    {user.about ? user.about : "Not Entered"}
-                  </p>
-                </div>
-                <div className="mt-4 text-left w-full">
-                  <h3 className="text-md font-semibold mb-1">Skills:</h3>
-                  <p className="text-sm text-gray-600">
-                    {user.skills.length > 0
-                      ? user.skills.join(", ")
-                      : "Not Entered"}
-                  </p>
-                </div>
-                <p className="text-xs text-gray-500 mt-4">
-                  Joined: {new Date(user.createdAt).toLocaleDateString()}
-                </p>
-                <p className="text-xs text-gray-500">
-                  Last Updated: {new Date(user.updatedAt).toLocaleDateString()}
-                </p>
               </div>
             </div>
-          </div>
-        )}
-        {!user && (
-          <div className="flex justify-center mt-5">
-            <p className="text-lg text-gray-600">
-              Loading profile or no user found...
-            </p>
-          </div>
-        )}
+          )}
+          {!user && (
+            <div className="flex justify-center mt-5">
+              <p className="text-lg text-gray-600">
+                Loading profile or no user found...
+              </p>
+            </div>
+          )}
+        </div>
+        <div className="flex flex-col justify-center items-center">
+          <h1 className="bg-blue-400 w-10/12 md:w-5/12 mt-5 p-5 mb-2">Posts</h1>
+          {postLoading ? (
+            <span className="loading loading-ring loading-xl m-auto"></span>
+          ) : null}
+          {posts.length !== 0 && <Posts feed={posts} />}
+        </div>
       </div>
-      <div className="flex flex-col justify-center items-center">
-        <h1 className="bg-blue-400 w-10/12 md:w-5/12 mt-5 p-5 mb-2">Posts</h1>
-        {postLoading ? (
-          <span className="loading loading-ring loading-xl m-auto"></span>
-        ) : null}
-        {posts.length !== 0 && <Posts feed={posts} />}
-      </div>
+      <div></div>
     </div>
   );
 };

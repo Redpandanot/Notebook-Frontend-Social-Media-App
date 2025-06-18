@@ -1,11 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { BASE_URL } from "../../utils/constants";
-import { FriendsDetails } from "./type";
+import { User } from "./type";
 import Card from "./Card";
 
 const NewFriends = () => {
-  const [newRequests, setNewRequests] = useState<FriendsDetails[]>([]);
+  const [newRequests, setNewRequests] = useState<User[]>([]);
 
   const fetch = async () => {
     try {
@@ -68,6 +68,7 @@ const NewFriends = () => {
                   _id={request._id}
                   firstName={request.firstName}
                   lastName={request.lastName}
+                  photo={request.photo}
                 />
                 <div className="flex gap-5">
                   <div className="card-actions">

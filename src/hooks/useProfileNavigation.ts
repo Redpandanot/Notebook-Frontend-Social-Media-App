@@ -7,7 +7,7 @@ const useProfileNavigation = () => {
   const handleNavigateToProfile = async (userId: string) => {
     try {
       const response = await handleVisitProfile(userId);
-      navigate("/profile", { state: { profile: response.data } });
+      navigate("/profile/" + response.data._id);
     } catch (error) {
       window.alert(error);
     }

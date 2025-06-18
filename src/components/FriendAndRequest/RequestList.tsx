@@ -52,6 +52,7 @@ const RequestList = () => {
                   _id={request.fromUserId._id}
                   firstName={request.fromUserId.firstName}
                   lastName={request.fromUserId.lastName}
+                  photo={request.fromUserId.photo}
                 />
                 <div className="flex gap-5">
                   <div className="card-actions">

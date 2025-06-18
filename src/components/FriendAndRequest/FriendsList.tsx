@@ -1,8 +1,8 @@
 import Card from "./Card";
-import { CardDetail } from "./type";
+import { User } from "./type";
 
 interface FriendsListProps {
-  friends: CardDetail[];
+  friends: User[];
 }
 
 const FriendsList: React.FC<FriendsListProps> = ({ friends }) => {
@@ -20,6 +20,7 @@ const FriendsList: React.FC<FriendsListProps> = ({ friends }) => {
                 _id={friend._id}
                 firstName={friend.firstName}
                 lastName={friend.lastName}
+                photo={friend.photo}
               />
             </div>
           </div>

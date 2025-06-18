@@ -8,14 +8,18 @@ import { addPosts } from "../store/slices/feedSlice";
 import { BASE_URL } from "../utils/constants";
 import axios from "axios";
 import { useAppSelector } from "../store/hooks";
-import { FriendsDetails } from "../components/FriendAndRequest/type";
+import { Followers, User } from "../components/FriendAndRequest/type";
 import CreatePost from "../components/CreatePost";
 import ProfilePostSkeleton from "../components/Skeleton/ProfilePostSkeleton";
+import FollowersList from "../components/FollowerAndFollowee/FollowersList";
+import FollowingList from "../components/FollowerAndFollowee/FollowingList";
 
 const Feed = () => {
   const [postLoading, setPostLoading] = useState<boolean>(true);
   const [friendsListLoading, setFriendsListLoading] = useState<boolean>(true);
-  const [friendsList, setFriendsList] = useState<FriendsDetails[]>([]);
+  const [friendsList, setFriendsList] = useState<User[]>([]);
+  const [followersList, setFollowersList] = useState<Followers[]>([]);
+  const [followingList, setFollowingList] = useState<Followers[]>([]);
   const feed = useAppSelector((state) => state.feed.posts);
   const dispatch = useDispatch();
   const [createPost, setCreatePost] = useState<boolean>(false);
@@ -53,6 +57,28 @@ const Feed = () => {
     }
   }, [setFriendsListLoading]);
 
+  const followersListFetch = useCallback(async () => {
+    try {
+      const response = await axios.get(BASE_URL + "/followers", {
+        withCredentials: true,
+      });
+      setFollowersList(response.data);
+    } catch (error) {
+      window.alert(error);
+    }
+  }, [setFollowersList]);
+
+  const FollowersListFetch = useCallback(async () => {
+    try {
+      const response = await axios.get(BASE_URL + "/following", {
+        withCredentials: true,
+      });
+      setFollowingList(response.data);
+    } catch (error) {
+      window.alert(error);
+    }
+  }, [setFollowingList]);
+
   const handleCreatePost = async (
     files: File[],
     title: string,
@@ -82,6 +108,14 @@ const Feed = () => {
     friendsListFetch();
   }, [friendsListFetch]);
 
+  useEffect(() => {
+    followersListFetch();
+  }, [followersListFetch]);
+
+  useEffect(() => {
+    FollowersListFetch();
+  }, [FollowersListFetch]);
+
   if (postLoading) {
     return <ProfilePostSkeleton />;
   }
@@ -90,6 +124,8 @@ const Feed = () => {
     <div className=" flex justify-evenly">
       <div className=" hidden xl:block">
         {!friendsListLoading && <FriendsList friends={friendsList} />}
+        <FollowersList followers={followersList} />
+        <FollowingList following={followingList} />
       </div>
       <div className="">
         <div className="flex flex-col items-center w-full">
