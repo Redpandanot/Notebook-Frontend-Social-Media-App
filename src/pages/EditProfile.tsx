@@ -29,6 +29,22 @@ const EditProfile = () => {
       window.alert(error);
     }
   };
+
+  const handleProfileUpdate = async () => {
+    console.log("data here ", profileState);
+
+    // const response = await axios.post(
+    //   BASE_URL + "/profile/edit",
+    //   {
+    //     profileState,
+    //   },
+    //   {
+    //     withCredentials: true,
+    //   }
+    // );
+    // console.log(response.data);
+  };
+
   return (
     <div className="flex flex-col justify-center w-full">
       {!editProfile ? (
@@ -120,15 +136,26 @@ const EditProfile = () => {
                   className="rounded-xl"
                 />
               </figure>
-              {/* {editProfile && (
+              {editProfile && (
                 <UploadImages handleImage={handleUpdateProfileImage} />
-              )} */}
+              )}
               <div className="input">
                 <label className="p-3">First Name</label>
                 <input
                   className="border-2"
                   type="text"
                   value={profileState.firstName}
+                  onChange={(e) => {
+                    setProfileState((prev) => {
+                      if (prev) {
+                        return {
+                          ...prev,
+                          firstName: e.target.value,
+                        };
+                      }
+                      return null;
+                    });
+                  }}
                 />
               </div>
               <div className="input">
@@ -137,6 +164,17 @@ const EditProfile = () => {
                   className="border-2"
                   type="text"
                   value={profileState.lastName}
+                  onChange={(e) => {
+                    setProfileState((prev) => {
+                      if (prev) {
+                        return {
+                          ...prev,
+                          lastName: e.target.value,
+                        };
+                      }
+                      return null;
+                    });
+                  }}
                 />
               </div>
               <div className="input">
@@ -145,6 +183,17 @@ const EditProfile = () => {
                   className="border-2"
                   type="text"
                   value={profileState.age}
+                  onChange={(e) => {
+                    setProfileState((prev) => {
+                      if (prev) {
+                        return {
+                          ...prev,
+                          age: e.target.value,
+                        };
+                      }
+                      return null;
+                    });
+                  }}
                 />
               </div>
               <div className="input">
@@ -153,6 +202,17 @@ const EditProfile = () => {
                   className="border-2"
                   type="text"
                   value={profileState.gender}
+                  onChange={(e) => {
+                    setProfileState((prev) => {
+                      if (prev) {
+                        return {
+                          ...prev,
+                          gender: e.target.value,
+                        };
+                      }
+                      return null;
+                    });
+                  }}
                 />
               </div>
               <div className="input">
@@ -161,6 +221,17 @@ const EditProfile = () => {
                   className="border-2"
                   type="text"
                   value={profileState.college}
+                  onChange={(e) => {
+                    setProfileState((prev) => {
+                      if (prev) {
+                        return {
+                          ...prev,
+                          college: e.target.value,
+                        };
+                      }
+                      return null;
+                    });
+                  }}
                 />
               </div>
               <div className="input">
@@ -169,6 +240,17 @@ const EditProfile = () => {
                   className="border-2"
                   type="text"
                   value={profileState.about}
+                  onChange={(e) => {
+                    setProfileState((prev) => {
+                      if (prev) {
+                        return {
+                          ...prev,
+                          about: e.target.value,
+                        };
+                      }
+                      return null;
+                    });
+                  }}
                 />
               </div>
               <div className="input">
@@ -177,6 +259,19 @@ const EditProfile = () => {
                   className="border-2"
                   type="text"
                   value={profileState.skills.join(",")}
+                  onChange={(e) => {
+                    setProfileState((prev) => {
+                      if (prev) {
+                        return {
+                          ...prev,
+                          skills: e.target.value
+                            .split(",")
+                            .map((item) => item.trim()),
+                        };
+                      }
+                      return null;
+                    });
+                  }}
                 />
               </div>
             </form>
@@ -186,6 +281,14 @@ const EditProfile = () => {
             >
               {editProfile ? "Cancel" : "Edit Profile"}
             </button>
+            {editProfile ? (
+              <button
+                className="btn btn-primary mt-3 w-40 m-auto"
+                onClick={() => handleProfileUpdate()}
+              >
+                Submit
+              </button>
+            ) : null}
           </div>
         )
       )}

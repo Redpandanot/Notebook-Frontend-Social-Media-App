@@ -139,7 +139,7 @@ const Signup = () => {
               </svg>
               <input
                 type="password"
-                placeholder="Password"
+                placeholder="Confirm Password"
                 onChange={(e) => setVerifyPassword(e.target.value)}
               />
             </label>

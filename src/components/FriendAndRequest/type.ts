@@ -65,7 +65,15 @@ export interface ProfileDetail {
   college: string;
   photo: PhotoObject;
   about: string;
-  skills: [];
+  skills: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Followers {
+  _id: string;
+  followee: User;
+  follower: User;
   createdAt: string;
   updatedAt: string;
 }
