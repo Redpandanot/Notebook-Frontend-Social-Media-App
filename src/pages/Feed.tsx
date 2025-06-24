@@ -13,6 +13,7 @@ import CreatePost from "../components/CreatePost";
 import ProfilePostSkeleton from "../components/Skeleton/ProfilePostSkeleton";
 import FollowersList from "../components/FollowerAndFollowee/FollowersList";
 import FollowingList from "../components/FollowerAndFollowee/FollowingList";
+import { Outlet, useOutlet } from "react-router-dom";
 
 const Feed = () => {
   const [postLoading, setPostLoading] = useState<boolean>(true);
@@ -23,6 +24,7 @@ const Feed = () => {
   const feed = useAppSelector((state) => state.feed.posts);
   const dispatch = useDispatch();
   const [createPost, setCreatePost] = useState<boolean>(false);
+  const outlet = useOutlet();
 
   const postFetch = useCallback(async () => {
     try {
@@ -127,20 +129,24 @@ const Feed = () => {
         <FollowersList followers={followersList} />
         <FollowingList following={followingList} />
       </div>
-      <div className="">
-        <div className="flex flex-col items-center w-full">
-          {createPost && <CreatePost handleImage={handleCreatePost} />}
+      {!outlet ? (
+        <div>
+          <div className="flex flex-col items-center w-full">
+            {createPost && <CreatePost handleImage={handleCreatePost} />}
+          </div>
+          <button
+            className={`btn btn-primary mb-5 sm:w-[600px] rounded-xl ${
+              createPost ? "bg-error" : "bg-primary"
+            }`}
+            onClick={() => setCreatePost(!createPost)}
+          >
+            {createPost ? "Cancel" : "Create Post"}
+          </button>
+          <Posts feed={feed} />
         </div>
-        <button
-          className={`btn btn-primary mb-5 sm:w-[600px] rounded-xl ${
-            createPost ? "bg-red-500" : "bg-blue-500"
-          }`}
-          onClick={() => setCreatePost(!createPost)}
-        >
-          {createPost ? "Cancel" : "Create Post"}
-        </button>
-        <Posts feed={feed} />
-      </div>
+      ) : (
+        <Outlet />
+      )}
       <div className=" hidden xl:block">
         <RequestList />
         <NewFriends />

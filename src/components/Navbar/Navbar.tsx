@@ -96,51 +96,55 @@ const Navbar = ({ handleSidebarClicked }: NavbarPropType) => {
       >
         <a className="btn btn-ghost text-xl">Notebook</a>
       </div>
-      <div className=" border-2 rounded-2xl w-60">
-        <label className="input">
-          <svg
-            className="h-[1em] opacity-50"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-          >
-            <g
-              strokeLinejoin="round"
-              strokeLinecap="round"
-              strokeWidth="2.5"
-              fill="none"
-              stroke="currentColor"
+      <div className="rounded-2xl w-60">
+        <div className="flex gap-2 w-[300px]">
+          <label className="input">
+            <svg
+              className="h-[1em] opacity-50"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
             >
-              <circle cx="11" cy="11" r="8"></circle>
-              <path d="m21 21-4.3-4.3"></path>
-            </g>
-          </svg>
-          <input
-            type="search"
-            required
-            placeholder="Search"
-            onChange={(e) => setSearch(e.target.value.trim())}
-            onFocus={() => setDisplay(true)}
-            onBlur={() => setDisplay(false)}
-          />
-        </label>
+              <g
+                strokeLinejoin="round"
+                strokeLinecap="round"
+                strokeWidth="2.5"
+                fill="none"
+                stroke="currentColor"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.3-4.3"></path>
+              </g>
+            </svg>
+            <input
+              type="search"
+              required
+              placeholder="Search"
+              onChange={(e) => setSearch(e.target.value.trim())}
+              onFocus={() => setDisplay(true)}
+              onBlur={() => setDisplay(false)}
+            />
+          </label>
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              if (search.length <= 3) return;
+              navigate("/search/" + search);
+            }}
+          >
+            Search
+          </button>
+        </div>
         {display && search !== "" && (
-          <ul className="list rounded-box shadow-md z-10 absolute bg-amber-50 w-60">
-            {/* <li className="p-4 pb-2 text-xs opacity-60 tracking-wide">Users</li> */}
+          <ul className="list rounded-box shadow-md z-10 bg-neutral absolute w-60">
             {loading ? (
               <span className="loading loading-ring loading-xl m-auto"></span>
             ) : (
               results.map((item) => {
                 return (
                   <li className="list-row" key={item._id}>
-                    {/* <div>
-                      <img
-                        className="size-10 rounded-box"
-                        src="https://img.daisyui.com/images/profile/demo/4@94.webp"
-                      />
-                    </div> */}
                     <div>
                       <div
-                        className=" cursor-pointer"
+                        className="cursor-pointer"
                         onClick={() => {
                           setDisplay(false);
                           handleNavigateToProfile(item._id);
@@ -149,9 +153,6 @@ const Navbar = ({ handleSidebarClicked }: NavbarPropType) => {
                       >
                         {item.firstName} {item.lastName}
                       </div>
-                      {/* <div className="text-xs uppercase font-semibold opacity-60">
-                        Bears of a fever
-                      </div> */}
                     </div>
                   </li>
                 );
@@ -161,13 +162,13 @@ const Navbar = ({ handleSidebarClicked }: NavbarPropType) => {
         )}
       </div>
       {profile && (
-        <div className="dropdown dropdown-end flex-none absolute right-0">
+        <div className="dropdown dropdown-end flex-none absolute right-5">
           <div
             tabIndex={0}
             role="button"
             className="btn btn-ghost btn-circle avatar"
           >
-            <div className="w-10 rounded-full">
+            <div className="ring-primary ring-offset-base-100 w-10 rounded-full ring-2 ring-offset-2">
               <img alt="Navbar component with Images" src={profile.photo.url} />
             </div>
           </div>

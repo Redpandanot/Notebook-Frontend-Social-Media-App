@@ -279,7 +279,7 @@ const EditProfile = () => {
               className="btn btn-primary mt-3 w-40 m-auto"
               onClick={() => setEditProfile(!editProfile)}
             >
-              {editProfile ? "Cancel" : "Edit Profile"}
+              Cancel
             </button>
             {editProfile ? (
               <button

@@ -57,15 +57,15 @@ const RequestList = () => {
                 <div className="flex gap-5">
                   <div className="card-actions">
                     <button
-                      className="btn btn-primary bg-blue-500"
+                      className="btn btn-primary"
                       onClick={() => handleConnection(request._id, "accepted")}
                     >
                       Accept
                     </button>
                   </div>
-                  <div className="card-actions bg-red-500">
+                  <div className="card-actions">
                     <button
-                      className="btn btn-primary"
+                      className="btn btn-error"
                       onClick={() => handleConnection(request._id, "rejected")}
                     >
                       Reject

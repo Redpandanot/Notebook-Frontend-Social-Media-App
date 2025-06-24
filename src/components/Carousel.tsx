@@ -35,13 +35,13 @@ const Carousel = ({ photos }: propType) => {
         <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
           <div
             onClick={handlePreviousImage}
-            className="btn btn-circle bg-amber-50 opacity-50"
+            className="btn btn-circle bg-primary opacity-50"
           >
             ❮
           </div>
           <div
             onClick={handleNextImage}
-            className="btn btn-circle bg-amber-50 opacity-50"
+            className="btn btn-circle bg-primary opacity-50"
           >
             ❯
           </div>
