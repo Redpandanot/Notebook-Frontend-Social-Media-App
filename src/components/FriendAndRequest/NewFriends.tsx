@@ -73,7 +73,7 @@ const NewFriends = () => {
                 <div className="flex gap-5">
                   <div className="card-actions">
                     <button
-                      className="btn btn-primary bg-blue-500"
+                      className="btn btn-primary"
                       onClick={() => handleConnect(request._id)}
                     >
                       Connect
