@@ -123,30 +123,32 @@ const Feed = () => {
   }
 
   return (
-    <div className=" flex justify-evenly">
+    <div className=" flex justify-center m-5">
       <div className=" hidden xl:block">
         {!friendsListLoading && <FriendsList friends={friendsList} />}
         <FollowersList followers={followersList} />
         <FollowingList following={followingList} />
       </div>
-      {!outlet ? (
-        <div>
-          <div className="flex flex-col items-center w-full">
-            {createPost && <CreatePost handleImage={handleCreatePost} />}
+      <div className=" flex justify-center w-full">
+        {!outlet ? (
+          <div>
+            <div className="flex flex-col items-center w-full">
+              {createPost && <CreatePost handleImage={handleCreatePost} />}
+            </div>
+            <button
+              className={`btn btn-primary mb-5 sm:w-[600px] rounded-xl ${
+                createPost ? "bg-error" : "bg-primary"
+              }`}
+              onClick={() => setCreatePost(!createPost)}
+            >
+              {createPost ? "Cancel" : "Create Post"}
+            </button>
+            <Posts feed={feed} />
           </div>
-          <button
-            className={`btn btn-primary mb-5 sm:w-[600px] rounded-xl ${
-              createPost ? "bg-error" : "bg-primary"
-            }`}
-            onClick={() => setCreatePost(!createPost)}
-          >
-            {createPost ? "Cancel" : "Create Post"}
-          </button>
-          <Posts feed={feed} />
-        </div>
-      ) : (
-        <Outlet />
-      )}
+        ) : (
+          <Outlet />
+        )}
+      </div>
       <div className=" hidden xl:block">
         <RequestList />
         <NewFriends />
