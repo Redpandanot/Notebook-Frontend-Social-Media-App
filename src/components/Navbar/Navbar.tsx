@@ -96,7 +96,7 @@ const Navbar = ({ handleSidebarClicked }: NavbarPropType) => {
       >
         <a className="btn btn-ghost text-xl">Notebook</a>
       </div>
-      <div className="rounded-2xl w-60">
+      <div className="rounded-2xl border-2">
         <div className="flex gap-2 w-[300px]">
           <label className="input">
             <svg
@@ -122,9 +122,16 @@ const Navbar = ({ handleSidebarClicked }: NavbarPropType) => {
               onChange={(e) => setSearch(e.target.value.trim())}
               onFocus={() => setDisplay(true)}
               onBlur={() => setDisplay(false)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  if (search.length <= 3) return;
+                  setDisplay(false);
+                  navigate("/search/" + search);
+                }
+              }}
             />
           </label>
-          <button
+          {/* <button
             className="btn btn-primary"
             onClick={() => {
               if (search.length <= 3) return;
@@ -132,10 +139,10 @@ const Navbar = ({ handleSidebarClicked }: NavbarPropType) => {
             }}
           >
             Search
-          </button>
+          </button> */}
         </div>
         {display && search !== "" && (
-          <ul className="list rounded-box shadow-md z-10 bg-neutral absolute w-60">
+          <ul className="list rounded-box shadow-md z-10 bg-amber-800 text-white absolute w-60">
             {loading ? (
               <span className="loading loading-ring loading-xl m-auto"></span>
             ) : (
@@ -168,7 +175,7 @@ const Navbar = ({ handleSidebarClicked }: NavbarPropType) => {
             role="button"
             className="btn btn-ghost btn-circle avatar"
           >
-            <div className="ring-primary ring-offset-base-100 w-10 rounded-full ring-2 ring-offset-2">
+            <div className="w-10 rounded-full">
               <img alt="Navbar component with Images" src={profile.photo.url} />
             </div>
           </div>

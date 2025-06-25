@@ -87,7 +87,6 @@ const CreatePost = ({ handleImage }: UploadImagesProps) => {
                 className="max-w-xs max-h-48 rounded-md shadow-md"
               />
             ))}
-          {/* Optional: Add a button to clear the preview/selected file */}
           <button className="btn btn-sm btn-error mt-2" onClick={handleClear}>
             Clear Image
           </button>

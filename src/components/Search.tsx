@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
 import { useEffect, useState } from "react";
 import Card from "./FriendAndRequest/Card";
@@ -8,6 +8,7 @@ import Posts from "./Posts/Posts";
 
 const Search = () => {
   const { query } = useParams();
+  const navigate = useNavigate();
   const [results, setResults] = useState({});
   const [tabSelected, setTabSelected] = useState("");
   const [tabData, setTabData] = useState([]);
@@ -46,7 +47,7 @@ const Search = () => {
 
   return (
     <div className="flex flex-col">
-      <div className="flex gap-2">
+      <div className="flex justify-center gap-2">
         {Object.entries(results).map((tab) => {
           return (
             <button
@@ -80,7 +81,11 @@ const Search = () => {
               );
             } else if (tabSelected === "commentList") {
               return (
-                <div key={item._id} className="m-10">
+                <div
+                  key={item._id}
+                  className="m-10 hover:cursor-pointer"
+                  onClick={() => navigate("/postDiscussion/" + item.postId)}
+                >
                   <div className="flex items-center">
                     <div className="pr-2">
                       <img
