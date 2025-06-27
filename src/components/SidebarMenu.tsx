@@ -7,10 +7,10 @@ interface SidebarPropType {
 const SidebarMenu = ({ handleSidebarClicked }: SidebarPropType) => {
   const navigate = useNavigate();
   return (
-    <div className="drawer flex flex-col justify-start z-10 bg-red-900 w-fit h-screen pt-3">
+    <div className="drawer flex flex-col justify-start z-10 bg-neutral h-screen pt-3">
       <div>
         <button
-          className="btn btn-square btn-ghost"
+          className="btn btn-square btn-ghost ml-3"
           onClick={handleSidebarClicked}
         >
           <svg
@@ -30,7 +30,7 @@ const SidebarMenu = ({ handleSidebarClicked }: SidebarPropType) => {
         </button>
       </div>
       <div>
-        <ul className="menu bg-base-200 text-base-content w-80 p-4">
+        <ul className="menu w-80 p-4 text-secondary-content">
           {/* Sidebar content here */}
           <li
             className=" hover:cursor-pointer"

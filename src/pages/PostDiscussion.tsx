@@ -73,7 +73,7 @@ const PostDiscussion = () => {
   }
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center mt-5">
       <div className="">
         <Posts feed={[post]} isCommentDisplayed={false} />
       </div>

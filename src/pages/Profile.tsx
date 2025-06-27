@@ -156,7 +156,7 @@ const Profile = () => {
           )}
         </div>
         <div className="flex flex-col justify-center items-center">
-          <h1 className="bg-blue-400 w-10/12 md:w-5/12 mt-5 p-5 mb-2">Posts</h1>
+          <h1 className="text-xl font-medium mt-10 mb-10">Posts</h1>
           {postLoading ? (
             <span className="loading loading-ring loading-xl m-auto"></span>
           ) : null}
