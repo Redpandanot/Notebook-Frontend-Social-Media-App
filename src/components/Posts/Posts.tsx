@@ -38,7 +38,7 @@ const Posts: React.FC<PostListProp> = ({ feed, isCommentDisplayed = true }) => {
     }
   };
 
-  const handleCommentClicked = (post: Post) => {
+  const handleVisitPost = (post: Post) => {
     navigate("/postDiscussion/" + post._id);
   };
 
@@ -67,7 +67,7 @@ const Posts: React.FC<PostListProp> = ({ feed, isCommentDisplayed = true }) => {
           </div>
           <div className="card-body" key={post._id}>
             <h2 className="card-title">{post.title}</h2>
-            <p>{post.description}</p>
+            <p className="whitespace-pre-wrap">{post.description}</p>
             <div className="card-actions justify-start">
               <button
                 className="btn btn-primary"
@@ -78,7 +78,7 @@ const Posts: React.FC<PostListProp> = ({ feed, isCommentDisplayed = true }) => {
               {isCommentDisplayed && (
                 <button
                   className="btn btn-primary"
-                  onClick={() => handleCommentClicked(post)}
+                  onClick={() => handleVisitPost(post)}
                 >
                   Comment {post.commentCount}
                 </button>

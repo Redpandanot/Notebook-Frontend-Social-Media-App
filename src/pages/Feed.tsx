@@ -86,7 +86,15 @@ const Feed = () => {
     title: string,
     description: string
   ) => {
-    if (!title || !description) return;
+    if (
+      !title ||
+      !description ||
+      title.length < 3 ||
+      title.length > 75 ||
+      description.length < 3 ||
+      description.length > 75
+    )
+      return;
     const formData = new FormData();
     formData.append("title", title);
     formData.append("description", description);
@@ -133,16 +141,23 @@ const Feed = () => {
         {!outlet ? (
           <div>
             <div className="flex flex-col items-center w-full">
-              {createPost && <CreatePost handleImage={handleCreatePost} />}
+              {createPost && (
+                <CreatePost
+                  handlePostCreation={handleCreatePost}
+                  handleCancel={setCreatePost}
+                />
+              )}
             </div>
-            <button
-              className={`btn btn-primary mb-5 sm:w-[600px] rounded-xl ${
-                createPost ? "bg-error" : "bg-primary"
-              }`}
-              onClick={() => setCreatePost(!createPost)}
-            >
-              {createPost ? "Cancel" : "Create Post"}
-            </button>
+            {!createPost && (
+              <button
+                className={
+                  "btn btn-primary mb-5 sm:w-[600px] rounded-xl bg-primary"
+                }
+                onClick={() => setCreatePost(!createPost)}
+              >
+                Create Post
+              </button>
+            )}
             <Posts feed={feed} />
           </div>
         ) : (

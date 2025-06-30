@@ -1,10 +1,18 @@
 import { ChangeEvent, useState } from "react";
 
 type UploadImagesProps = {
-  handleImage: (images: File[], title: string, description: string) => void;
+  handlePostCreation: (
+    images: File[],
+    title: string,
+    description: string
+  ) => void;
+  handleCancel: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const CreatePost = ({ handleImage }: UploadImagesProps) => {
+const CreatePost = ({
+  handlePostCreation,
+  handleCancel,
+}: UploadImagesProps) => {
   const [file, setFile] = useState<File[]>([]);
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string[]>([]);
   const [title, setTitle] = useState<string>("");
@@ -62,9 +70,9 @@ const CreatePost = ({ handleImage }: UploadImagesProps) => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center mt-3 mb-2 p-3 sm:w-[600px] w-full border-2 rounded">
+    <div className="flex flex-col justify-center bg-neutral items-center mt-10 mb-2 p-3 sm:w-[600px] w-full border-2 rounded">
       <fieldset className="fieldset">
-        <legend className="fieldset-legend">
+        <legend className="fieldset-legend text-secondary-content">
           Pick an image<label className="label">(Optional)</label>
         </legend>
         <input
@@ -94,7 +102,9 @@ const CreatePost = ({ handleImage }: UploadImagesProps) => {
       )}
       <div className="w-full">
         <fieldset className="fieldset border-1 w-full rounded">
-          <legend className="fieldset-legend m-2">Heading</legend>
+          <legend className="fieldset-legend m-2 text-secondary-content">
+            Heading {title.length}/75 (min 3 characters)
+          </legend>
           <input
             type="text"
             className="input w-full"
@@ -103,21 +113,37 @@ const CreatePost = ({ handleImage }: UploadImagesProps) => {
           />
         </fieldset>
         <fieldset className="fieldset border-1 w-full rounded">
-          <legend className="fieldset-legend m-2">Description</legend>
-          <input
-            type="text"
-            className="input w-full"
+          <legend className="fieldset-legend m-2 text-secondary-content">
+            Description {description.length}/1500 (min 3 characters)
+          </legend>
+          <textarea
+            className="input w-full h-56 whitespace-pre-wrap break-words pt-3"
+            rows={4}
+            value={description}
             placeholder="Type here"
             onChange={(e) => setDescription(e.target.value)}
           />
         </fieldset>
       </div>
-      <input
-        type="submit"
-        value="Submit"
-        className="btn btn-sm mt-3"
-        onClick={() => handleImage(file, title, description)}
-      />
+      <div>
+        {(title.length < 3 ||
+          title.length > 75 ||
+          description.length < 3 ||
+          description.length > 75) && (
+          <button
+            className="btn btn-sm mt-3 mr-3"
+            onClick={() => handlePostCreation(file, title, description)}
+          >
+            Submit
+          </button>
+        )}
+        <button
+          className="btn btn-sm btn-secondary mt-3"
+          onClick={() => handleCancel((prev) => !prev)}
+        >
+          Cancel
+        </button>
+      </div>
     </div>
   );
 };
