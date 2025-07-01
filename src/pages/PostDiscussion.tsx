@@ -95,7 +95,7 @@ const PostDiscussion = () => {
         </div>
         <div className="border-2 mt-5">
           <h2 className="card-title p-5">Discussion</h2>
-          <div>
+          <div className="p-2">
             {discussion.length > 0 &&
               postId &&
               discussion.map((item) => {
