@@ -53,13 +53,14 @@ const Posts: React.FC<PostListProp> = ({ feed, isCommentDisplayed = true }) => {
             className="avatar cursor-pointer"
             onClick={() => navigate("/profile/" + post.userId._id)}
           >
-            <div className="ring-primary ring-offset-base-100 w-6 m-3 rounded-full ring-2 ring-offset-2">
+            <div className="w-6 m-3 rounded-full">
               <img src={post.userId.photo.url} />
             </div>
             <h2 className="card-title">
               {post.userId.firstName} {post.userId.lastName}
             </h2>
           </div>
+          <div className="divider -mt-2"></div>
           <div className="flex justify-center relative">
             {post.photos && post.photos.length > 0 && (
               <Carousel photos={post.photos} />

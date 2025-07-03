@@ -46,7 +46,10 @@ const RequestList = () => {
       {requests.length !== 0 ? (
         requests.map((request) => {
           return (
-            <div key={request._id} className="card bg-base-100 w-72 shadow-sm">
+            <div
+              key={request._id}
+              className="card bg-base-100 w-72 shadow-sm mb-3"
+            >
               <div className="card-body">
                 <Card
                   _id={request.fromUserId._id}

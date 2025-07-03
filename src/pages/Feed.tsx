@@ -23,7 +23,6 @@ const Feed = () => {
   const [followingList, setFollowingList] = useState<Followers[]>([]);
   const feed = useAppSelector((state) => state.feed.posts);
   const dispatch = useDispatch();
-  const [createPost, setCreatePost] = useState<boolean>(false);
   const outlet = useOutlet();
 
   const postFetch = useCallback(async () => {
@@ -104,11 +103,11 @@ const Feed = () => {
         formData.append("files", file);
       });
     }
+    (document.getElementById("my_modal_1") as HTMLDialogElement)?.close();
     try {
       await axios.post(BASE_URL + "/post/create", formData, {
         withCredentials: true,
       });
-      setCreatePost(false);
     } catch (error) {
       window.alert(error);
     }
@@ -141,23 +140,18 @@ const Feed = () => {
         {!outlet ? (
           <div>
             <div className="flex flex-col items-center w-full">
-              {createPost && (
-                <CreatePost
-                  handlePostCreation={handleCreatePost}
-                  handleCancel={setCreatePost}
-                />
-              )}
+              <CreatePost handlePostCreation={handleCreatePost} />
             </div>
-            {!createPost && (
-              <button
-                className={
-                  "btn btn-primary mb-5 sm:w-[600px] rounded-xl bg-primary"
-                }
-                onClick={() => setCreatePost(!createPost)}
-              >
-                Create Post
-              </button>
-            )}
+            <button
+              className="btn btn-primary mb-5 sm:w-[600px] rounded-xl bg-primary"
+              onClick={() =>
+                (
+                  document.getElementById("my_modal_1") as HTMLDialogElement
+                )?.showModal()
+              }
+            >
+              Create Post
+            </button>
             <Posts feed={feed} />
           </div>
         ) : (
