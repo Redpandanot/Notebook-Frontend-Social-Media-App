@@ -37,15 +37,17 @@ const Home = () => {
   return (
     <>
       {!loading && profile ? (
-        <div className="flex">
-          <div>
+        <div className="flex flex-col h-screen">
+          <Navbar handleSidebarClicked={handleSidebarClicked} />
+          <div className="flex flex-1 overflow-hidden">
             {sideNavigationMenu && (
-              <SidebarMenu handleSidebarClicked={handleSidebarClicked} />
+              <div className="w-64 bg-base-200 shadow-xl overflow-y-auto">
+                <SidebarMenu handleSidebarClicked={handleSidebarClicked} />
+              </div>
             )}
-          </div>
-          <div className="w-full">
-            <Navbar handleSidebarClicked={handleSidebarClicked} />
-            <Outlet />
+            <div className="flex-1 overflow-y-auto">
+              <Outlet />
+            </div>
           </div>
         </div>
       ) : (

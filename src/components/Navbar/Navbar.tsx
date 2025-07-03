@@ -156,35 +156,24 @@ const Navbar = ({ handleSidebarClicked }: NavbarPropType) => {
               }}
             />
           </label>
-          {/* <button
-            className="btn btn-primary"
-            onClick={() => {
-              if (search.length <= 3) return;
-              navigate("/search/" + search);
-            }}
-          >
-            Search
-          </button> */}
         </div>
         {display && search !== "" && (
-          <ul className="list rounded-box shadow-md z-10 bg-amber-800 text-white absolute w-60">
+          <ul className="list rounded-box shadow-md z-10 bg-base-200 absolute w-60">
             {loading ? (
               <span className="loading loading-ring loading-xl m-auto"></span>
             ) : (
               results.map((item) => {
                 return (
                   <li className="list-row" key={item._id}>
-                    <div>
-                      <div
-                        className="cursor-pointer"
-                        onClick={() => {
-                          setDisplay(false);
-                          handleNavigateToProfile(item._id);
-                        }}
-                        onMouseDown={(e) => e.preventDefault()}
-                      >
-                        {item.firstName} {item.lastName}
-                      </div>
+                    <div
+                      className="cursor-pointer hover:bg-neutral hover:text-secondary-content rounded-box p-2 w-50"
+                      onClick={() => {
+                        setDisplay(false);
+                        handleNavigateToProfile(item._id);
+                      }}
+                      onMouseDown={(e) => e.preventDefault()}
+                    >
+                      {item.firstName} {item.lastName}
                     </div>
                   </li>
                 );
@@ -206,10 +195,20 @@ const Navbar = ({ handleSidebarClicked }: NavbarPropType) => {
           </div>
           <ul
             tabIndex={0}
-            className="menu menu-sm dropdown-content rounded-box z-1 mt-1 w-52 p-4 bg-neutral text-secondary-content hover:cursor-pointer"
+            className="menu menu-sm dropdown-content rounded-box z-10 mt-1 w-52 p-2 bg-base-200"
           >
-            <li onClick={() => navigate("/profile/" + profile._id)}>Profile</li>
-            <li onClick={handleLogout}>Logout</li>
+            <li
+              className="cursor-pointer hover:bg-neutral hover:text-secondary-content rounded-box p-1"
+              onClick={() => navigate("/profile/" + profile._id)}
+            >
+              Profile
+            </li>
+            <li
+              className="cursor-pointer hover:bg-neutral hover:text-secondary-content rounded-box p-1"
+              onClick={handleLogout}
+            >
+              Logout
+            </li>
           </ul>
         </div>
       )}

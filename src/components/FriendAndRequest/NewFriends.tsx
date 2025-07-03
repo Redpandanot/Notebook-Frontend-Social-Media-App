@@ -61,7 +61,7 @@ const NewFriends = () => {
           return (
             <div
               key={request._id}
-              className="card bg-base-100 w-72 shadow-sm max-[1150px]:hidden block"
+              className="card bg-base-100 w-72 shadow-sm max-[1150px]:hidden block mb-3"
             >
               <div className="card-body">
                 <Card

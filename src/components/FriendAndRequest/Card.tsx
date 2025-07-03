@@ -9,7 +9,7 @@ const Card: React.FC<User> = ({ _id, firstName, lastName, photo }) => {
       className="flex items-center gap-1 cursor-pointer avatar"
       onClick={() => handleNavigateToProfile(_id)}
     >
-      <div className="ring-primary ring-offset-base-100 w-5 rounded-full ring-2 ring-offset-2 mr-2">
+      <div className="w-5 rounded-full mr-2">
         <img
           alt="Navbar component with Images"
           src={
