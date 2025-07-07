@@ -21,9 +21,12 @@ const Profile = () => {
     async (profileId: string) => {
       try {
         setPostLoading(true);
-        const result = await axios.get(BASE_URL + "/posts/view/" + profileId, {
-          withCredentials: true,
-        });
+        const result = await axios.get(
+          BASE_URL + "/posts/view/" + profileId + "?limit=10",
+          {
+            withCredentials: true,
+          }
+        );
         setPosts(result.data);
         setPostLoading(false);
       } catch (error) {

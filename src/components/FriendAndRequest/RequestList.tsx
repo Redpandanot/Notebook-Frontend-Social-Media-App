@@ -9,9 +9,12 @@ const RequestList = () => {
 
   const fetch = useCallback(async () => {
     try {
-      const result = await axios.get(BASE_URL + "/friend-requests/view", {
-        withCredentials: true,
-      });
+      const result = await axios.get(
+        BASE_URL + "/friend-requests/view?limit=3",
+        {
+          withCredentials: true,
+        }
+      );
       setRequests(result.data);
     } catch (error) {
       window.alert(error);

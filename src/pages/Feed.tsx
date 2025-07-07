@@ -3,12 +3,9 @@ import RequestList from "../components/FriendAndRequest/RequestList";
 import NewFriends from "../components/FriendAndRequest/NewFriends";
 import FriendsList from "../components/FriendAndRequest/FriendsList";
 import { useCallback, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { addPosts } from "../store/slices/feedSlice";
 import { BASE_URL } from "../utils/constants";
 import axios from "axios";
-import { useAppSelector } from "../store/hooks";
-import { Followers, User } from "../components/FriendAndRequest/type";
+import { Post, User } from "../components/FriendAndRequest/type";
 import CreatePost from "../components/CreatePost";
 import ProfilePostSkeleton from "../components/Skeleton/ProfilePostSkeleton";
 import FollowersList from "../components/FollowerAndFollowee/FollowersList";
@@ -16,69 +13,49 @@ import FollowingList from "../components/FollowerAndFollowee/FollowingList";
 import { Outlet, useOutlet } from "react-router-dom";
 
 const Feed = () => {
+  const [initialLoading, setInitialLoading] = useState<boolean>(true);
   const [postLoading, setPostLoading] = useState<boolean>(true);
-  const [friendsListLoading, setFriendsListLoading] = useState<boolean>(true);
-  const [friendsList, setFriendsList] = useState<User[]>([]);
-  const [followersList, setFollowersList] = useState<Followers[]>([]);
-  const [followingList, setFollowingList] = useState<Followers[]>([]);
-  const feed = useAppSelector((state) => state.feed.posts);
-  const dispatch = useDispatch();
+  const [noNewPosts, setNoNewPosts] = useState<boolean>(false);
+  const [feed, setFeed] = useState<Post[]>([]);
   const outlet = useOutlet();
 
-  const postFetch = useCallback(async () => {
-    try {
-      setPostLoading(true);
-      const result = await axios.get(BASE_URL + "/posts/feed/?limit=10", {
-        withCredentials: true,
-      });
+  const [limitAndPagePosts, setLimitAndPagePosts] = useState([3, 1]);
 
-      dispatch(addPosts(result.data));
-      setPostLoading(false);
+  const postFetch = useCallback(async () => {
+    const isFirst = limitAndPagePosts[1] === 1;
+    if (isFirst) setInitialLoading(true);
+    setPostLoading(true);
+    try {
+      const result = await axios.get(
+        BASE_URL +
+          "/posts/feed?limit=" +
+          limitAndPagePosts[0] +
+          "&page=" +
+          limitAndPagePosts[1],
+        {
+          withCredentials: true,
+        }
+      );
+      if (result.data.length > 0) {
+        if (isFirst) {
+          setFeed([...result.data]);
+        } else {
+          setFeed((prev) => [...prev, ...result.data]);
+        }
+      } else {
+        setNoNewPosts(true);
+      }
     } catch (error) {
       window.alert("from feed" + error);
+    } finally {
+      setPostLoading(false);
+      setInitialLoading(false);
     }
-  }, [dispatch, setPostLoading]);
+  }, [limitAndPagePosts]);
 
   useEffect(() => {
     postFetch();
   }, [postFetch]);
-
-  const friendsListFetch = useCallback(async () => {
-    try {
-      setFriendsListLoading(true);
-      const response = await axios.get(BASE_URL + "/friends-list", {
-        withCredentials: true,
-      });
-
-      setFriendsList(response.data);
-      setFriendsListLoading(false);
-    } catch (error) {
-      setFriendsListLoading(false);
-      window.alert(error);
-    }
-  }, [setFriendsListLoading]);
-
-  const followersListFetch = useCallback(async () => {
-    try {
-      const response = await axios.get(BASE_URL + "/followers", {
-        withCredentials: true,
-      });
-      setFollowersList(response.data);
-    } catch (error) {
-      window.alert(error);
-    }
-  }, [setFollowersList]);
-
-  const FollowersListFetch = useCallback(async () => {
-    try {
-      const response = await axios.get(BASE_URL + "/following", {
-        withCredentials: true,
-      });
-      setFollowingList(response.data);
-    } catch (error) {
-      window.alert(error);
-    }
-  }, [setFollowingList]);
 
   const handleCreatePost = async (
     files: File[],
@@ -113,28 +90,16 @@ const Feed = () => {
     }
   };
 
-  useEffect(() => {
-    friendsListFetch();
-  }, [friendsListFetch]);
-
-  useEffect(() => {
-    followersListFetch();
-  }, [followersListFetch]);
-
-  useEffect(() => {
-    FollowersListFetch();
-  }, [FollowersListFetch]);
-
-  if (postLoading) {
+  if (initialLoading) {
     return <ProfilePostSkeleton />;
   }
 
   return (
     <div className=" flex justify-center m-5">
       <div className=" hidden xl:block">
-        {!friendsListLoading && <FriendsList friends={friendsList} />}
-        <FollowersList followers={followersList} />
-        <FollowingList following={followingList} />
+        <FriendsList />
+        <FollowersList />
+        <FollowingList />
       </div>
       <div className=" flex justify-center w-full">
         {!outlet ? (
@@ -152,7 +117,28 @@ const Feed = () => {
             >
               Create Post
             </button>
-            <Posts feed={feed} />
+            <div className="flex flex-col items-center">
+              <Posts feed={feed} />
+              {!noNewPosts ? (
+                !postLoading ? (
+                  <button
+                    className="btn w-20"
+                    onClick={() =>
+                      setLimitAndPagePosts([
+                        limitAndPagePosts[0],
+                        limitAndPagePosts[1] + 1,
+                      ])
+                    }
+                  >
+                    More...
+                  </button>
+                ) : (
+                  <span className="loading loading-ring loading-xl m-auto"></span>
+                )
+              ) : (
+                <div>No More Feed to show</div>
+              )}
+            </div>
           </div>
         ) : (
           <Outlet />
