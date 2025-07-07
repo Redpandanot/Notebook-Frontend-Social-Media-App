@@ -1,15 +1,34 @@
+import axios from "axios";
+import { BASE_URL } from "../../utils/constants";
 import Card from "./Card";
-import { User } from "./type";
+import { useQuery } from "@tanstack/react-query";
+import ProfileCardSkeleton from "../Skeleton/ProfileCardSkeleton";
 
-interface FriendsListProps {
-  friends: User[];
-}
+const FriendsList = () => {
+  const friendsListFetch = async () => {
+    try {
+      const response = await axios.get(BASE_URL + "/friends-list?limit=3", {
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      return error;
+    }
+  };
 
-const FriendsList: React.FC<FriendsListProps> = ({ friends }) => {
+  const { isPending, isError, data, error } = useQuery({
+    queryKey: ["friends"],
+    queryFn: friendsListFetch,
+  });
+
+  if (isPending) {
+    return <ProfileCardSkeleton />;
+  }
+
   return (
     <div className="mb-10 flex flex-col items-center">
       <h1 className="text font-bold mb-1">Friends</h1>
-      {friends.map((friend) => {
+      {data.map((friend) => {
         return (
           <div
             key={friend._id}

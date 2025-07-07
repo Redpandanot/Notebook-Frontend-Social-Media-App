@@ -1,15 +1,34 @@
 import Card from "../FriendAndRequest/Card";
-import { Followers } from "../FriendAndRequest/type";
+import { BASE_URL } from "../../utils/constants";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+import ProfileCardSkeleton from "../Skeleton/ProfileCardSkeleton";
 
-interface FollowersListProps {
-  following: Followers[];
-}
+const FollowingList = () => {
+  const followingListFetch = async () => {
+    try {
+      const response = await axios.get(BASE_URL + "/following?limit=3", {
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      return error;
+    }
+  };
 
-const FollowingList: React.FC<FollowersListProps> = ({ following }) => {
+  const { isPending, isError, data, error } = useQuery({
+    queryKey: ["following"],
+    queryFn: followingListFetch,
+  });
+
+  if (isPending) {
+    return <ProfileCardSkeleton />;
+  }
+
   return (
     <div className="mb-10 flex flex-col items-center">
       <h1 className="text font-bold mb-1">Following</h1>
-      {following.map((item) => {
+      {data.map((item) => {
         return (
           <div
             key={item.followee._id}
