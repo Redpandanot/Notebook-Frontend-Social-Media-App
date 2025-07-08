@@ -5,7 +5,7 @@ import FriendsList from "../components/FriendAndRequest/FriendsList";
 import { useCallback, useEffect, useState } from "react";
 import { BASE_URL } from "../utils/constants";
 import axios from "axios";
-import { Post, User } from "../components/FriendAndRequest/type";
+import { Post } from "../components/FriendAndRequest/type";
 import CreatePost from "../components/CreatePost";
 import ProfilePostSkeleton from "../components/Skeleton/ProfilePostSkeleton";
 import FollowersList from "../components/FollowerAndFollowee/FollowersList";
