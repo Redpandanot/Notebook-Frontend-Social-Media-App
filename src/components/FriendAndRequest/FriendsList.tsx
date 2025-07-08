@@ -6,14 +6,10 @@ import ProfileCardSkeleton from "../Skeleton/ProfileCardSkeleton";
 
 const FriendsList = () => {
   const friendsListFetch = async () => {
-    try {
-      const response = await axios.get(BASE_URL + "/friends-list?limit=3", {
-        withCredentials: true,
-      });
-      return response.data;
-    } catch (error) {
-      return error;
-    }
+    const response = await axios.get(BASE_URL + "/friends-list?limit=3", {
+      withCredentials: true,
+    });
+    return response.data;
   };
 
   const { isPending, isError, data, error } = useQuery({
@@ -23,6 +19,10 @@ const FriendsList = () => {
 
   if (isPending) {
     return <ProfileCardSkeleton />;
+  }
+
+  if (isError) {
+    return <h1>{error.message}</h1>;
   }
 
   return (
