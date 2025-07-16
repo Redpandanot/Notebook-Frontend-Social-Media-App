@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { BASE_URL } from "../../utils/constants";
-import { User } from "./type";
+import { User } from "../../Types/type";
 import Card from "./Card";
 
 const NewFriends = () => {

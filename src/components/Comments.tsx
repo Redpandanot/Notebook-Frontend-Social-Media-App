@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Comments as CommentType } from "./FriendAndRequest/type";
+import { Comments as CommentType } from "../Types/type";
 
 interface propType {
   item: CommentType;

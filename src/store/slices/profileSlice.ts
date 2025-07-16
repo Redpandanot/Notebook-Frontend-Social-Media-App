@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { BASE_URL } from "../../utils/constants";
-import { ProfileDetail } from "../../components/FriendAndRequest/type";
+import { ProfileDetail } from "../../Types/type";
 
 export const getProfile = createAsyncThunk(
   "profile/view",

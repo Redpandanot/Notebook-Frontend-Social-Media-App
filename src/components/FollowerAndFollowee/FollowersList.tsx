@@ -18,7 +18,11 @@ const FollowersList = () => {
   });
 
   if (isPending) {
-    return <ProfileCardSkeleton />;
+    return (
+      <div className="mb-10 flex flex-col items-center">
+        <ProfileCardSkeleton />
+      </div>
+    );
   }
 
   if (isError) {

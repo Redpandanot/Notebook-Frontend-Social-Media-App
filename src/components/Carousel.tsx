@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { PhotoObject } from "./FriendAndRequest/type";
+import { PhotoObject } from "../Types/type";
 
 interface propType {
   photos: PhotoObject[];

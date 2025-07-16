@@ -5,7 +5,7 @@ import { BASE_URL } from "../utils/constants";
 import axios from "axios";
 import UploadImages from "../components/UploadImages/UploadImages";
 import { handleVisitProfile } from "../utils/handleVisitProfile";
-import { ProfileDetail } from "../components/FriendAndRequest/type";
+import { ProfileDetail } from "../Types/type";
 import { useAppSelector } from "../store/hooks";
 import ProfilePostSkeleton from "../components/Skeleton/ProfilePostSkeleton";
 

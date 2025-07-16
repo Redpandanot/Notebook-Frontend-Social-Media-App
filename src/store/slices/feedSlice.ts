@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Post } from "../../components/FriendAndRequest/type";
+import { Post } from "../../Types/type";
 
 interface FeedState {
   posts: Post[]; // <--- The feed state is an array of Post objects

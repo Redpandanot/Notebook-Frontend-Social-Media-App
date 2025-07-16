@@ -1,6 +1,6 @@
 import axios from "axios";
 import { BASE_URL } from "../../utils/constants";
-import { Post } from "../FriendAndRequest/type";
+import { Post } from "../../Types/type";
 import { useEffect, useState } from "react";
 import Carousel from "../Carousel";
 import { useNavigate } from "react-router-dom";

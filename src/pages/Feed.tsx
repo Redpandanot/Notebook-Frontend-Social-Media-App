@@ -5,7 +5,7 @@ import FriendsList from "../components/FriendAndRequest/FriendsList";
 import { useCallback, useEffect, useState } from "react";
 import { BASE_URL } from "../utils/constants";
 import axios from "axios";
-import { Post } from "../components/FriendAndRequest/type";
+import { Post } from "../Types/type";
 import CreatePost from "../components/CreatePost";
 import ProfilePostSkeleton from "../components/Skeleton/ProfilePostSkeleton";
 import FollowersList from "../components/FollowerAndFollowee/FollowersList";
@@ -96,56 +96,56 @@ const Feed = () => {
 
   return (
     <div className=" flex justify-center m-5">
-      <div className=" hidden xl:block">
+      {/* <div className=" hidden xl:block">
         <FriendsList />
         <FollowersList />
         <FollowingList />
-      </div>
-      <div className=" flex justify-center w-full">
-        {!outlet ? (
-          <div>
-            <div className="flex flex-col items-center w-full">
-              <CreatePost handlePostCreation={handleCreatePost} />
-            </div>
-            <button
-              className="btn btn-primary mb-5 sm:w-[600px] rounded-xl bg-primary"
-              onClick={() =>
-                (
-                  document.getElementById("my_modal_1") as HTMLDialogElement
-                )?.showModal()
-              }
-            >
-              Create Post
-            </button>
-            <div className="flex flex-col items-center">
-              <Posts feed={feed} />
-              {!noNewPosts ? (
-                !postLoading ? (
-                  <button
-                    className="btn w-20"
-                    onClick={() =>
-                      setLimitAndPagePosts([
-                        limitAndPagePosts[0],
-                        limitAndPagePosts[1] + 1,
-                      ])
-                    }
-                  >
-                    More...
-                  </button>
-                ) : (
-                  <span className="loading loading-ring loading-xl m-auto"></span>
-                )
-              ) : (
-                <div>No More Feed to show</div>
-              )}
-            </div>
+      </div> */}
+      {/* <div className=" flex justify-center w-full"> */}
+      {!outlet ? (
+        <div>
+          <div className="flex flex-col items-center w-full">
+            <CreatePost handlePostCreation={handleCreatePost} />
           </div>
-        ) : (
-          <Outlet />
-        )}
-      </div>
-      <div className=" hidden xl:block">
-        <RequestList />
+          <button
+            className="btn btn-primary mb-5 sm:w-[600px] rounded-xl bg-primary"
+            onClick={() =>
+              (
+                document.getElementById("my_modal_1") as HTMLDialogElement
+              )?.showModal()
+            }
+          >
+            Create Post
+          </button>
+          <div className="flex flex-col items-center">
+            <Posts feed={feed} />
+            {!noNewPosts ? (
+              !postLoading ? (
+                <button
+                  className="btn w-20"
+                  onClick={() =>
+                    setLimitAndPagePosts([
+                      limitAndPagePosts[0],
+                      limitAndPagePosts[1] + 1,
+                    ])
+                  }
+                >
+                  More...
+                </button>
+              ) : (
+                <span className="loading loading-ring loading-xl m-auto"></span>
+              )
+            ) : (
+              <div>No More Feed to show</div>
+            )}
+          </div>
+        </div>
+      ) : (
+        <Outlet />
+      )}
+      {/* </div> */}
+      <div className=" absolute right-5 hidden xl:block">
+        {/* <RequestList /> */}
         <NewFriends />
       </div>
     </div>
