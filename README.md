@@ -1,5 +1,15 @@
 # Notebook Frontend Social Media App
 
+## Table of Contents
+
+1. [Project Overview](#project-overview)
+2. [Tech Stack](#tech-stack)
+3. [Features](#features)
+4. [Getting Started](#getting-started)
+5. [Deployment](#deployment)
+6. [Contributing](#contributing)
+7. [License](#license)
+
 ## Project Overview
 
 **Notebook** is a college-focused social media platform combining professional networking and community discussions. The _Notebook Frontend_ provides the web interface where students can sign up, create profiles, and connect with peers. Inspired by LinkedIn’s networking features and Reddit’s discussion forums, the app lets users share posts, follow others, join interest-based groups, comment on threads, and engage in real-time chat within a responsive web UI.
