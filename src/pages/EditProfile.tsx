@@ -3,7 +3,7 @@ import UploadImages from "../components/UploadImages/UploadImages";
 import { useAppSelector } from "../store/hooks";
 import { BASE_URL } from "../utils/constants";
 import { useState } from "react";
-import { ProfileDetail } from "../components/FriendAndRequest/type";
+import { ProfileDetail } from "../Types/type";
 
 const EditProfile = () => {
   const profile = useAppSelector((state) => state.profile);

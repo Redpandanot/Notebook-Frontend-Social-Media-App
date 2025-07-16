@@ -1,5 +1,5 @@
 import React from "react";
-import { User } from "./type";
+import { User } from "../../Types/type";
 import useProfileNavigation from "../../hooks/useProfileNavigation";
 
 const Card: React.FC<User> = ({ _id, firstName, lastName, photo }) => {
