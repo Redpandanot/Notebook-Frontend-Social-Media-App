@@ -7,8 +7,6 @@
 3. [Features](#features)
 4. [Getting Started](#getting-started)
 5. [Deployment](#deployment)
-6. [Contributing](#contributing)
-7. [License](#license)
 
 ## Project Overview
 
