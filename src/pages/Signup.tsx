@@ -14,6 +14,13 @@ const Signup = () => {
   const dispatch = useDispatch();
 
   const handleSignup = async () => {
+    if (password !== verifyPassword) return;
+    const passwordPattern =
+      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z\d]).{8,}$/;
+
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    if (!passwordPattern.test(password) || !emailPattern.test(emailId)) return;
     try {
       const result = await axios.post(BASE_URL + "/signup", {
         firstName,
@@ -69,7 +76,7 @@ const Signup = () => {
                 type="email"
                 placeholder="mail@site.com"
                 required
-                onChange={(e) => setEmailId(e.target.value)}
+                onChange={(e) => setEmailId(e.target.value.trim())}
               />
             </label>
             <div className="validator-hint hidden">
@@ -102,8 +109,8 @@ const Signup = () => {
               <input
                 type="password"
                 placeholder="Password"
-                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-                onChange={(e) => setPassword(e.target.value)}
+                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z\d]).{8,}"
+                onChange={(e) => setPassword(e.target.value.trim())}
               />
             </label>
             <p className="validator-hint hidden">
@@ -111,7 +118,8 @@ const Signup = () => {
               <br />
               At least one number <br />
               At least one lowercase letter <br />
-              At least one uppercase letter
+              At least one uppercase letter <br />
+              At least one specail character
             </p>
           </div>
           <div>
@@ -140,10 +148,11 @@ const Signup = () => {
               <input
                 type="password"
                 placeholder="Confirm Password"
-                onChange={(e) => setVerifyPassword(e.target.value)}
+                pattern={password}
+                onChange={(e) => setVerifyPassword(e.target.value.trim())}
               />
             </label>
-            {password !== verifyPassword && <p>Passwords do not match</p>}
+            <p className="validator-hint">Passwords do not match</p>
           </div>
           <div className="card-actions justify-center">
             <button className="btn btn-primary" onClick={handleSignup}>

@@ -53,7 +53,11 @@ const FriendsList = () => {
               <button
                 className="btn w-20"
                 onClick={() => {
-                  navigate("/chat/" + friend._id);
+                  navigate("/chat", {
+                    state: {
+                      toUserId: friend._id,
+                    },
+                  });
                 }}
               >
                 Chat

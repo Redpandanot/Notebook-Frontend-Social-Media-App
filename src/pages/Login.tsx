@@ -45,7 +45,7 @@ const Login = () => {
         </figure>
         <div className="card-body">
           <div>
-            <label className="input validator">
+            <label className="input">
               <svg
                 className="h-[1em] opacity-50"
                 xmlns="http://www.w3.org/2000/svg"
@@ -74,7 +74,7 @@ const Login = () => {
             </div>
           </div>
           <div>
-            <label className="input validator">
+            <label className="input">
               <svg
                 className="h-[1em] opacity-50"
                 xmlns="http://www.w3.org/2000/svg"
@@ -104,13 +104,6 @@ const Login = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </label>
-            <p className="validator-hint hidden">
-              Must be more than 8 characters, including
-              <br />
-              At least one number <br />
-              At least one lowercase letter <br />
-              At least one uppercase letter
-            </p>
           </div>
           <div className="card-actions justify-center">
             <button className="btn btn-primary" onClick={handleLogin}>

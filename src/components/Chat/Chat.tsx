@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { createSocketConnection } from "../utils/socket";
-import { useAppSelector } from "../store/hooks";
-import { formatDateHeader } from "../utils/helperFunctions";
-import { Chat as ChatType } from "../Types/type";
+import { createSocketConnection } from "../../utils/socket";
+import { useAppSelector } from "../../store/hooks";
+import { formatDateHeader } from "../../utils/helperFunctions";
+import { Chat as ChatType } from "../../Types/type";
 
-const Chat = () => {
-  const { toUserId } = useParams();
+interface ChatProp {
+  toUserId: string;
+}
+
+const Chat: React.FC<ChatProp> = ({ toUserId }) => {
   const [chatHistory, setChatHistory] = useState<ChatType[]>([]);
   const [message, setMessage] = useState<string>();
   const profile = useAppSelector((store) => store.profile);
@@ -28,7 +30,7 @@ const Chat = () => {
     return () => {
       socket.disconnect();
     };
-  }, []);
+  }, [toUserId]);
 
   const sendMessage = () => {
     const socket = createSocketConnection();
@@ -40,7 +42,7 @@ const Chat = () => {
   };
 
   return (
-    <div className="w-8/12 h-full m-auto border-2 flex flex-col">
+    <div className="flex flex-col h-[calc(100vh-90px)] m-auto border-2">
       <div className="flex-grow">
         {chatHistory.map((item, i) => {
           const currentDate = new Date(item.createdAt);

@@ -8,13 +8,8 @@ export const checkAndFetchProfile = async (
 ): Promise<boolean> => {
   if (profile === null) {
     setLoading(true);
-    try {
-      await dispatch(getProfile()).unwrap();
-    } catch {
-      window.alert("User not logged in, please:");
-    } finally {
-      setLoading(false);
-    }
+    await dispatch(getProfile());
+    setLoading(false);
     return true;
   } else {
     setLoading(false);
