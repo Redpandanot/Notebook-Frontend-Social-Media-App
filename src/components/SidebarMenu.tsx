@@ -48,6 +48,14 @@ const SidebarMenu = ({ handleSidebarClicked }: SidebarPropType) => {
       >
         <a>Friend Requests</a>
       </li>
+      <li
+        onClick={() => {
+          handleSidebarClicked();
+          navigate("/chat");
+        }}
+      >
+        <a>Chat</a>
+      </li>
     </ul>
   );
 };
