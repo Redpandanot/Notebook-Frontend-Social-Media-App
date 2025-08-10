@@ -52,7 +52,7 @@ const Whisper = () => {
                     <div>
                       <img
                         className="size-10 rounded-box"
-                        src={item.photo.url}
+                        src={item.photo?.url}
                       />
                     </div>
                     <div>
