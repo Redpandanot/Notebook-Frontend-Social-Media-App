@@ -16,11 +16,45 @@ const SidebarMenu = ({ handleSidebarClicked }: SidebarPropType) => {
       >
         <a>Edit Profile</a>
       </li>
-      <li>
-        <a>Item 2</a>
+      <li
+        onClick={() => {
+          handleSidebarClicked();
+          navigate("/friends");
+        }}
+      >
+        <a>Friends</a>
       </li>
-      <li>
-        <a>Item 3</a>
+      <li
+        onClick={() => {
+          handleSidebarClicked();
+          navigate("/followers");
+        }}
+      >
+        <a>Followers</a>
+      </li>
+      <li
+        onClick={() => {
+          handleSidebarClicked();
+          navigate("/following");
+        }}
+      >
+        <a>Following</a>
+      </li>
+      <li
+        onClick={() => {
+          handleSidebarClicked();
+          navigate("/friend-requests");
+        }}
+      >
+        <a>Friend Requests</a>
+      </li>
+      <li
+        onClick={() => {
+          handleSidebarClicked();
+          navigate("/chat");
+        }}
+      >
+        <a>Chat</a>
       </li>
     </ul>
   );

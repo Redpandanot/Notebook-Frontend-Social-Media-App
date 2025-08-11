@@ -4,6 +4,7 @@ import { useState } from "react";
 import { BASE_URL } from "../utils/constants";
 import axios from "axios";
 import { Post } from "../Types/type";
+import { Post } from "../Types/type";
 import CreatePost from "../components/CreatePost";
 import ProfilePostSkeleton from "../components/Skeleton/ProfilePostSkeleton";
 import { Outlet, useOutlet } from "react-router-dom";

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { BASE_URL } from "../../utils/constants";
-import { FriendRequest } from "./type";
+import { FriendRequest } from "../../Types/type";
 import Card from "./Card";
 
 const RequestList = () => {

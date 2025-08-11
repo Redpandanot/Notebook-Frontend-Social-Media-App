@@ -3,8 +3,13 @@ import { BASE_URL } from "../../utils/constants";
 import Card from "./Card";
 import { useQuery } from "@tanstack/react-query";
 import ProfileCardSkeleton from "../Skeleton/ProfileCardSkeleton";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const FriendsList = () => {
+  const navigate = useNavigate();
+  const [page, setPage] = useState<number>(0);
+
   const friendsListFetch = async () => {
     const response = await axios.get(BASE_URL + "/friends-list?limit=3", {
       withCredentials: true,
@@ -18,7 +23,11 @@ const FriendsList = () => {
   });
 
   if (isPending) {
-    return <ProfileCardSkeleton />;
+    return (
+      <div className="mb-10 flex flex-col items-center">
+        <ProfileCardSkeleton />
+      </div>
+    );
   }
 
   if (isError) {
@@ -41,10 +50,25 @@ const FriendsList = () => {
                 lastName={friend.lastName}
                 photo={friend.photo}
               />
+              <button
+                className="btn w-20"
+                onClick={() => {
+                  navigate("/chat", {
+                    state: {
+                      toUserId: friend._id,
+                    },
+                  });
+                }}
+              >
+                Chat
+              </button>
             </div>
           </div>
         );
       })}
+      <button className="btn w-20" onClick={() => setPage((prev) => prev + 1)}>
+        More...
+      </button>
     </div>
   );
 };

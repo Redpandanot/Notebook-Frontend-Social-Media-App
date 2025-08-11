@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import useProfileNavigation from "../../hooks/useProfileNavigation";
-import { ProfileDetail } from "../FriendAndRequest/type";
+import { ProfileDetail } from "../../Types/type";
 
 interface NavbarPropType {
   handleSidebarClicked: () => void;

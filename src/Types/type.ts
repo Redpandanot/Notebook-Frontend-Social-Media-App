@@ -77,3 +77,14 @@ export interface Followers {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface Chat {
+  _id: string;
+  chatId: string;
+  fromUserId: string;
+  toUserId: string;
+  text: string;
+  seen: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
