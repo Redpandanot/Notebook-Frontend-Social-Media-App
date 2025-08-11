@@ -1,16 +1,13 @@
 import Posts from "../components/Posts/Posts";
-import RequestList from "../components/FriendAndRequest/RequestList";
 import NewFriends from "../components/FriendAndRequest/NewFriends";
-import FriendsList from "../components/FriendAndRequest/FriendsList";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { BASE_URL } from "../utils/constants";
 import axios from "axios";
-import { Post } from "../components/FriendAndRequest/type";
+import { Post } from "../Types/type";
 import CreatePost from "../components/CreatePost";
 import ProfilePostSkeleton from "../components/Skeleton/ProfilePostSkeleton";
-import FollowersList from "../components/FollowerAndFollowee/FollowersList";
-import FollowingList from "../components/FollowerAndFollowee/FollowingList";
 import { Outlet, useOutlet } from "react-router-dom";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
 const Feed = () => {
   const [initialLoading, setInitialLoading] = useState<boolean>(true);
@@ -19,43 +16,36 @@ const Feed = () => {
   const [feed, setFeed] = useState<Post[]>([]);
   const outlet = useOutlet();
 
-  const [limitAndPagePosts, setLimitAndPagePosts] = useState([3, 1]);
+  const LIMIT = 3;
 
-  const postFetch = useCallback(async () => {
-    const isFirst = limitAndPagePosts[1] === 1;
-    if (isFirst) setInitialLoading(true);
-    setPostLoading(true);
-    try {
-      const result = await axios.get(
-        BASE_URL +
-          "/posts/feed?limit=" +
-          limitAndPagePosts[0] +
-          "&page=" +
-          limitAndPagePosts[1],
-        {
-          withCredentials: true,
-        }
-      );
-      if (result.data.length > 0) {
-        if (isFirst) {
-          setFeed([...result.data]);
-        } else {
-          setFeed((prev) => [...prev, ...result.data]);
-        }
-      } else {
-        setNoNewPosts(true);
+  const postFetch = async ({ pageParam = 1 }) => {
+    const result = await axios.get(
+      `${BASE_URL}/posts/feed?limit=${LIMIT}&page=${pageParam}`,
+      { withCredentials: true }
+    );
+    return result.data;
+  };
+
+  const {
+    data,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isLoading,
+    isFetchingNextPage,
+    status,
+  } = useInfiniteQuery({
+    queryKey: ["feed"],
+    queryFn: postFetch,
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages) => {
+      if (lastPage.length === LIMIT) {
+        return allPages.length + 1;
       }
-    } catch (error) {
-      window.alert("from feed" + error);
-    } finally {
-      setPostLoading(false);
-      setInitialLoading(false);
-    }
-  }, [limitAndPagePosts]);
-
-  useEffect(() => {
-    postFetch();
-  }, [postFetch]);
+      return undefined;
+    },
+    refetchOnWindowFocus: false,
+  });
 
   const handleCreatePost = async (
     files: File[],
@@ -90,62 +80,48 @@ const Feed = () => {
     }
   };
 
-  if (initialLoading) {
+  if (isLoading) {
     return <ProfilePostSkeleton />;
   }
 
   return (
     <div className=" flex justify-center m-5">
-      <div className=" hidden xl:block">
-        <FriendsList />
-        <FollowersList />
-        <FollowingList />
-      </div>
-      <div className=" flex justify-center w-full">
-        {!outlet ? (
-          <div>
-            <div className="flex flex-col items-center w-full">
-              <CreatePost handlePostCreation={handleCreatePost} />
-            </div>
-            <button
-              className="btn btn-primary mb-5 sm:w-[600px] rounded-xl bg-primary"
-              onClick={() =>
-                (
-                  document.getElementById("my_modal_1") as HTMLDialogElement
-                )?.showModal()
-              }
-            >
-              Create Post
-            </button>
-            <div className="flex flex-col items-center">
-              <Posts feed={feed} />
-              {!noNewPosts ? (
-                !postLoading ? (
-                  <button
-                    className="btn w-20"
-                    onClick={() =>
-                      setLimitAndPagePosts([
-                        limitAndPagePosts[0],
-                        limitAndPagePosts[1] + 1,
-                      ])
-                    }
-                  >
-                    More...
-                  </button>
-                ) : (
-                  <span className="loading loading-ring loading-xl m-auto"></span>
-                )
-              ) : (
-                <div>No More Feed to show</div>
-              )}
-            </div>
+      {!outlet ? (
+        <div>
+          <div className="flex flex-col items-center w-full">
+            <CreatePost handlePostCreation={handleCreatePost} />
           </div>
-        ) : (
-          <Outlet />
-        )}
-      </div>
-      <div className=" hidden xl:block">
-        <RequestList />
+          <button
+            className="btn btn-primary mb-5 sm:w-[600px] rounded-xl bg-primary"
+            onClick={() =>
+              (
+                document.getElementById("my_modal_1") as HTMLDialogElement
+              )?.showModal()
+            }
+          >
+            Create Post
+          </button>
+          <div className="flex flex-col items-center">
+            {data?.pages.map((page, i) => {
+              return <Posts key={i} feed={page} />;
+            })}
+            {hasNextPage ? (
+              <button className="btn w-20" onClick={() => fetchNextPage()}>
+                {isFetchingNextPage ? (
+                  <span className="loading loading-ring loading-xl m-auto"></span>
+                ) : (
+                  hasNextPage && "Load More"
+                )}
+              </button>
+            ) : (
+              "Nothing more to load"
+            )}
+          </div>
+        </div>
+      ) : (
+        <Outlet />
+      )}
+      <div className=" absolute right-5 hidden xl:block">
         <NewFriends />
       </div>
     </div>
