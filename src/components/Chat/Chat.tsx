@@ -55,7 +55,7 @@ const Chat: React.FC<ChatProp> = ({ toUserId }) => {
   }, [typingUser]);
 
   const sendMessage = () => {
-    // const socket = createSocketConnection();
+    emitStopTyping();
     socket.current.emit("sendMessage", {
       toUserId,
       text: message,
@@ -125,7 +125,7 @@ const Chat: React.FC<ChatProp> = ({ toUserId }) => {
           );
         })}
         {typingUser && (
-          <div className="text-sm text-gray-500 px-4 pb-2">Typing...</div>
+          <span className="loading loading-dots loading-sm ml-4 mt-4"></span>
         )}
       </div>
       <div className="flex w-full p-5 border-2">

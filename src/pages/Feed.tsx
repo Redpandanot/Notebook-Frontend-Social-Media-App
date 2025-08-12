@@ -1,20 +1,24 @@
+import { useEffect } from "react";
 import Posts from "../components/Posts/Posts";
 import NewFriends from "../components/FriendAndRequest/NewFriends";
-import { useState } from "react";
 import { BASE_URL } from "../utils/constants";
 import axios from "axios";
-import { Post } from "../Types/type";
-import { Post } from "../Types/type";
 import CreatePost from "../components/CreatePost";
 import ProfilePostSkeleton from "../components/Skeleton/ProfilePostSkeleton";
-import { Outlet, useOutlet } from "react-router-dom";
+import { Outlet, useOutlet, useOutletContext } from "react-router-dom";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInView } from "react-intersection-observer";
+import { OutletType } from "../Types/type";
 
 const Feed = () => {
-  const [initialLoading, setInitialLoading] = useState<boolean>(true);
-  const [postLoading, setPostLoading] = useState<boolean>(true);
-  const [noNewPosts, setNoNewPosts] = useState<boolean>(false);
-  const [feed, setFeed] = useState<Post[]>([]);
+  const { mainScrollRef } = useOutletContext<OutletType>();
+
+  const [ref, inView] = useInView({
+    root: mainScrollRef?.current,
+    rootMargin: "500px",
+    threshold: 0,
+  });
+
   const outlet = useOutlet();
 
   const LIMIT = 3;
@@ -34,7 +38,6 @@ const Feed = () => {
     hasNextPage,
     isLoading,
     isFetchingNextPage,
-    status,
   } = useInfiniteQuery({
     queryKey: ["feed"],
     queryFn: postFetch,
@@ -81,8 +84,18 @@ const Feed = () => {
     }
   };
 
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
   if (isLoading) {
     return <ProfilePostSkeleton />;
+  }
+
+  if (error) {
+    return "Something went wrong";
   }
 
   return (
@@ -107,7 +120,11 @@ const Feed = () => {
               return <Posts key={i} feed={page} />;
             })}
             {hasNextPage ? (
-              <button className="btn w-20" onClick={() => fetchNextPage()}>
+              <button
+                ref={ref}
+                className="btn w-30"
+                onClick={() => fetchNextPage()}
+              >
                 {isFetchingNextPage ? (
                   <span className="loading loading-ring loading-xl m-auto"></span>
                 ) : (

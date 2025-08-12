@@ -1,4 +1,5 @@
 import { ChangeEvent, useState } from "react";
+import Toast from "./Toast/Toast";
 
 type UploadImagesProps = {
   handlePostCreation: (
@@ -13,13 +14,14 @@ const CreatePost = ({ handlePostCreation }: UploadImagesProps) => {
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string[]>([]);
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
+  const [uploadError, setUploadError] = useState("");
 
   const handleFileInput = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const newlySelectedFiles = Array.from(e.target.files);
 
       if (file.length + newlySelectedFiles.length > 5) {
-        window.alert("Cannot upload more than 5 images");
+        setUploadError("Cannot upload more than 5 images");
         return;
       }
 
@@ -140,6 +142,9 @@ const CreatePost = ({ handlePostCreation }: UploadImagesProps) => {
           </form>
         </div>
       </div>
+      {uploadError.length > 0 && (
+        <Toast message={uploadError} isCancelled={() => setUploadError("")} />
+      )}
     </dialog>
   );
 };
