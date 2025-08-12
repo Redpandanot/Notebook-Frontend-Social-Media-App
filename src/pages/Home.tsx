@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { useNavigate } from "react-router-dom";
 import { Outlet } from "react-router-dom";
@@ -14,6 +14,7 @@ const Home = () => {
   const profile = useAppSelector((store) => store.profile);
   const dispatch = useAppDispatch();
   const [sideNavigationMenu, setSideNavigationMenu] = useState<boolean>(false);
+  const mainScrollRef = useRef<HTMLDivElement | null>(null);
 
   const fetch = useCallback(
     async () => checkAndFetchProfile(profile, setLoading, dispatch, getProfile),
@@ -45,8 +46,8 @@ const Home = () => {
                 <SidebarMenu handleSidebarClicked={handleSidebarClicked} />
               </div>
             )}
-            <div className="flex-1 overflow-y-auto">
-              <Outlet />
+            <div ref={mainScrollRef} className="flex-1 overflow-y-auto">
+              <Outlet context={{ mainScrollRef }} />
             </div>
           </div>
         </div>

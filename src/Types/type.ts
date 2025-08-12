@@ -14,19 +14,6 @@ export interface FriendRequest {
   updatedAt: string;
 }
 
-export interface FriendsDetails {
-  _id: string;
-  firstName: string;
-  lastName?: string;
-  emailId: string;
-}
-
-export interface CardDetail {
-  _id: string;
-  firstName: string;
-  lastName?: string;
-}
-
 export interface Post {
   _id: string;
   userId: User;
@@ -87,4 +74,8 @@ export interface Chat {
   seen: boolean;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface OutletType {
+  mainScrollRef: React.RefObject<HTMLDivElement | null> | null;
 }

@@ -1,29 +1,31 @@
 import axios from "axios";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect } from "react";
 import { BASE_URL } from "../../utils/constants";
-import { FriendRequest } from "../../Types/type";
+import { FriendRequest, OutletType } from "../../Types/type";
 import Card from "./Card";
+import { useOutletContext } from "react-router-dom";
+import { useInView } from "react-intersection-observer";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import ProfileCardSkeleton from "../Skeleton/ProfileCardSkeleton";
 
 const RequestList = () => {
-  const [requests, setRequests] = useState<FriendRequest[]>([]);
+  const { mainScrollRef } = useOutletContext<OutletType>();
 
-  const fetch = useCallback(async () => {
-    try {
-      const result = await axios.get(
-        BASE_URL + "/friend-requests/view?limit=3",
-        {
-          withCredentials: true,
-        }
-      );
-      setRequests(result.data);
-    } catch (error) {
-      window.alert(error);
-    }
-  }, [setRequests]);
+  const [ref, inView] = useInView({
+    root: mainScrollRef?.current,
+    rootMargin: "500px",
+    threshold: 0,
+  });
 
-  useEffect(() => {
-    fetch();
-  }, [fetch]);
+  const LIMIT = 10;
+
+  const friendRequests = async () => {
+    const result = await axios.get(BASE_URL + "/friend-requests/view?limit=3", {
+      withCredentials: true,
+    });
+
+    return result.data;
+  };
 
   const handleConnection = async (requestId: string, status: string) => {
     try {
@@ -43,11 +45,49 @@ const RequestList = () => {
     }
   };
 
+  const {
+    data,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isLoading,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: ["friendRequests"],
+    queryFn: friendRequests,
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages) => {
+      if (lastPage.length === LIMIT) {
+        return allPages.length + 1;
+      }
+      return undefined;
+    },
+    refetchOnWindowFocus: false,
+  });
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  if (isLoading) {
+    return (
+      <div className="mb-10 flex flex-col items-center">
+        <ProfileCardSkeleton />
+      </div>
+    );
+  }
+
+  if (error) {
+    return "Something went wrong";
+  }
+
   return (
     <div className="mb-10 flex flex-col items-center">
       <h1 className="text font-bold mb-1">Requests</h1>
-      {requests.length !== 0 ? (
-        requests.map((request) => {
+      {data?.pages.map((page) => {
+        return page.map((request: FriendRequest) => {
           return (
             <div
               key={request._id}
@@ -81,9 +121,18 @@ const RequestList = () => {
               </div>
             </div>
           );
-        })
+        });
+      })}
+      {hasNextPage ? (
+        <button ref={ref} className="btn w-30" onClick={() => fetchNextPage()}>
+          {isFetchingNextPage ? (
+            <span className="loading loading-ring loading-xl m-auto"></span>
+          ) : (
+            hasNextPage && "Load More"
+          )}
+        </button>
       ) : (
-        <div>No new requests available</div>
+        "Nothing more to load"
       )}
     </div>
   );
