@@ -44,6 +44,7 @@ const Chat: React.FC<ChatProp> = ({ toUserId }) => {
 
     return () => {
       socket.current.disconnect();
+      setChatHistory([]);
     };
   }, [toUserId, profile]);
 
@@ -56,6 +57,9 @@ const Chat: React.FC<ChatProp> = ({ toUserId }) => {
 
   const sendMessage = () => {
     emitStopTyping();
+    if (!message || message.length < 150) {
+      return;
+    }
     socket.current.emit("sendMessage", {
       toUserId,
       text: message,
@@ -84,6 +88,14 @@ const Chat: React.FC<ChatProp> = ({ toUserId }) => {
     emitTyping();
     emitStopTyping();
   };
+
+  if (chatHistory.length === 0) {
+    return (
+      <div className="flex flex-col h-[calc(100vh-90px)] border-2">
+        <span className=" m-auto loading loading-infinity loading-xl"></span>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-[calc(100vh-90px)] m-auto border-2">

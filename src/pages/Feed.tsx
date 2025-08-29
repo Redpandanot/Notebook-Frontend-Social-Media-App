@@ -8,7 +8,7 @@ import ProfilePostSkeleton from "../components/Skeleton/ProfilePostSkeleton";
 import { Outlet, useOutlet, useOutletContext } from "react-router-dom";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
-import { OutletType } from "../Types/type";
+import { OutletType, Post } from "../Types/type";
 
 const Feed = () => {
   const { mainScrollRef } = useOutletContext<OutletType>();
@@ -116,8 +116,10 @@ const Feed = () => {
             Create Post
           </button>
           <div className="flex flex-col items-center">
-            {data?.pages.map((page, i) => {
-              return <Posts key={i} feed={page} />;
+            {data?.pages.map((posts) => {
+              return posts.map((post: Post) => {
+                return <Posts key={post._id} postObject={post} />;
+              });
             })}
             {hasNextPage ? (
               <button

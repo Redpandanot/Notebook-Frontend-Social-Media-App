@@ -37,7 +37,11 @@ const Whisper = () => {
     <div className="flex gap-5 ml-10 mt-3 mr-10 mb-3">
       <div className="flex-1">
         <ul className="list bg-base-100 rounded-box shadow-md">
-          <li className="p-4 pb-2 text-xs opacity-60 tracking-wide">Chats</li>
+          <input
+            type="text"
+            placeholder="Search"
+            className="input input-bordered m-4 mb-4 w-24 md:w-auto"
+          />
           {data.map((chat) => {
             return chat.participants.map((item) => {
               if (profile && item._id !== profile._id) {

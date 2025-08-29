@@ -70,9 +70,9 @@ const PostDiscussion = () => {
   }
 
   return (
-    <div className="flex flex-col items-center mt-5">
-      <div className="">
-        <Posts feed={[post]} isCommentDisplayed={false} />
+    <div className="flex flex-col items-center mt-5 mb-5">
+      <div>
+        <Posts post={post} isCommentDisplayed={false} />
       </div>
       <div className="sm:w-[800px] w-full">
         <div className="border-2 p-5">
@@ -93,7 +93,7 @@ const PostDiscussion = () => {
         <div className="border-2 mt-5">
           <h2 className="card-title p-5">Discussion</h2>
           <div className="p-2">
-            {discussion.length > 0 &&
+            {discussion.length > 0 ? (
               postId &&
               discussion.map((item) => {
                 return (
@@ -106,7 +106,10 @@ const PostDiscussion = () => {
                     handleComment={handleComment}
                   />
                 );
-              })}
+              })
+            ) : (
+              <h3 className="pl-3">Be the first one to start discussion</h3>
+            )}
           </div>
         </div>
       </div>
