@@ -31,36 +31,17 @@ const EditProfile = () => {
   };
 
   const handleProfileUpdate = async () => {
-    if (!profileState || !profile) return;
-    //@ts-ignore
-    const {
-      id,
-      photo,
-      skills,
-      createdAt,
-      updatedAt,
-      emailId,
-      ...newProfileState
-    } = profileState;
+    console.log("data here ", profileState);
 
-    const editedState = {};
-
-    for (const key in newProfileState) {
-      //@ts-ignore
-      if (profile[key] !== newProfileState[key]) {
-        //@ts-ignore
-        editedState[key] = newProfileState[key];
-      }
-    }
-    const response = await axios.post(
-      BASE_URL + "/profile/edit",
-      {
-        ...editedState,
-      },
-      {
-        withCredentials: true,
-      }
-    );
+    // const response = await axios.post(
+    //   BASE_URL + "/profile/edit",
+    //   {
+    //     profileState,
+    //   },
+    //   {
+    //     withCredentials: true,
+    //   }
+    // );
     // console.log(response.data);
   };
 
@@ -127,7 +108,9 @@ const EditProfile = () => {
                   <div className="mt-4 text-left w-full">
                     <h3 className="text-md font-semibold mb-1">Skills:</h3>
                     <p className="text-sm text-gray-600">
-                      {profile.skills.length > 0 && profile.skills.join(", ")}
+                      {profile.skills.length > 0
+                        ? profile.skills.join(", ")
+                        : "Not Entered"}
                     </p>
                   </div>
                   <p className="text-xs text-gray-500 mt-4">
@@ -161,7 +144,7 @@ const EditProfile = () => {
                 <input
                   className="border-2"
                   type="text"
-                  value={profileState.firstName || ""}
+                  value={profileState.firstName}
                   onChange={(e) => {
                     setProfileState((prev) => {
                       if (prev) {
@@ -180,7 +163,7 @@ const EditProfile = () => {
                 <input
                   className="border-2"
                   type="text"
-                  value={profileState.lastName || ""}
+                  value={profileState.lastName}
                   onChange={(e) => {
                     setProfileState((prev) => {
                       if (prev) {
@@ -199,7 +182,7 @@ const EditProfile = () => {
                 <input
                   className="border-2"
                   type="text"
-                  value={profileState.age || ""}
+                  value={profileState.age}
                   onChange={(e) => {
                     setProfileState((prev) => {
                       if (prev) {
@@ -218,7 +201,7 @@ const EditProfile = () => {
                 <input
                   className="border-2"
                   type="text"
-                  value={profileState.gender || ""}
+                  value={profileState.gender}
                   onChange={(e) => {
                     setProfileState((prev) => {
                       if (prev) {
@@ -237,7 +220,7 @@ const EditProfile = () => {
                 <input
                   className="border-2"
                   type="text"
-                  value={profileState.college || ""}
+                  value={profileState.college}
                   onChange={(e) => {
                     setProfileState((prev) => {
                       if (prev) {
@@ -256,7 +239,7 @@ const EditProfile = () => {
                 <input
                   className="border-2"
                   type="text"
-                  value={profileState.about || ""}
+                  value={profileState.about}
                   onChange={(e) => {
                     setProfileState((prev) => {
                       if (prev) {
@@ -275,7 +258,7 @@ const EditProfile = () => {
                 <input
                   className="border-2"
                   type="text"
-                  value={profileState.skills.join(",") || ""}
+                  value={profileState.skills.join(",")}
                   onChange={(e) => {
                     setProfileState((prev) => {
                       if (prev) {
