@@ -72,7 +72,7 @@ const PostDiscussion = () => {
   return (
     <div className="flex flex-col items-center mt-5 mb-5">
       <div>
-        <Posts post={post} isCommentDisplayed={false} />
+        <Posts postObject={post} isCommentDisplayed={false} />
       </div>
       <div className="sm:w-[800px] w-full">
         <div className="border-2 p-5">

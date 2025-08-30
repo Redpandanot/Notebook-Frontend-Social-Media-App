@@ -36,9 +36,9 @@ const Posts: React.FC<PostListProp> = ({
 
   const mutation = useMutation({
     mutationFn: updateLike,
-    onMutate: () => {
+    onSettled: (data) => {
       setPost((prevPost) => {
-        return { ...prevPost, likeCount: prevPost.likeCount + 1 };
+        return { ...prevPost, likeCount: data.likeCount };
       });
     },
   });
@@ -78,9 +78,9 @@ const Posts: React.FC<PostListProp> = ({
           <h2 className="card-title">{post.title}</h2>
           <p className="whitespace-pre-wrap">{post.description}</p>
           <div className="card-actions flex w-full">
-            <div className="badge badge-outline">
+            {/* <div className="badge badge-outline">
               {post.likeCount} {post.likeCount > 1 ? "Likes" : "Like"}
-            </div>
+            </div> */}
           </div>
           <div className="card-actions justify-start">
             <button

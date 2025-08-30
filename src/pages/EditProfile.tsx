@@ -52,16 +52,20 @@ const EditProfile = () => {
         editedState[key] = newProfileState[key];
       }
     }
-    const response = await axios.post(
-      BASE_URL + "/profile/edit",
-      {
-        ...editedState,
-      },
-      {
-        withCredentials: true,
-      }
-    );
-    // console.log(response.data);
+    try {
+      await axios.post(
+        BASE_URL + "/profile/edit",
+        {
+          ...editedState,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      setEditProfile(false);
+    } catch {
+      window.alert("Profile edit failed :(");
+    }
   };
 
   return (
@@ -157,9 +161,9 @@ const EditProfile = () => {
                 <UploadImages handleImage={handleUpdateProfileImage} />
               )}
               <div className="input">
-                <label className="p-3">First Name</label>
+                <label className="p-2">First Name</label>
                 <input
-                  className="border-2"
+                  className="border-1"
                   type="text"
                   value={profileState.firstName || ""}
                   onChange={(e) => {
@@ -176,9 +180,9 @@ const EditProfile = () => {
                 />
               </div>
               <div className="input">
-                <label className="p-3">Last Name</label>
+                <label className="p-2">Last Name</label>
                 <input
-                  className="border-2"
+                  className="border-1"
                   type="text"
                   value={profileState.lastName || ""}
                   onChange={(e) => {
@@ -195,9 +199,9 @@ const EditProfile = () => {
                 />
               </div>
               <div className="input">
-                <label className="p-3">Age</label>
+                <label className="p-2">Age</label>
                 <input
-                  className="border-2"
+                  className="border-1"
                   type="text"
                   value={profileState.age || ""}
                   onChange={(e) => {
@@ -214,28 +218,9 @@ const EditProfile = () => {
                 />
               </div>
               <div className="input">
-                <label className="p-3">Gender</label>
+                <label className="p-2">College</label>
                 <input
-                  className="border-2"
-                  type="text"
-                  value={profileState.gender || ""}
-                  onChange={(e) => {
-                    setProfileState((prev) => {
-                      if (prev) {
-                        return {
-                          ...prev,
-                          gender: e.target.value,
-                        };
-                      }
-                      return null;
-                    });
-                  }}
-                />
-              </div>
-              <div className="input">
-                <label className="p-3">College</label>
-                <input
-                  className="border-2"
+                  className="border-1"
                   type="text"
                   value={profileState.college || ""}
                   onChange={(e) => {
@@ -252,9 +237,9 @@ const EditProfile = () => {
                 />
               </div>
               <div className="input">
-                <label className="p-3">About</label>
+                <label className="p-2">About</label>
                 <input
-                  className="border-2"
+                  className="border-1"
                   type="text"
                   value={profileState.about || ""}
                   onChange={(e) => {
@@ -271,9 +256,9 @@ const EditProfile = () => {
                 />
               </div>
               <div className="input">
-                <label className="p-3">Skills</label>
+                <label className="p-2">Skills (csv)</label>
                 <input
-                  className="border-2"
+                  className="border-1"
                   type="text"
                   value={profileState.skills.join(",") || ""}
                   onChange={(e) => {

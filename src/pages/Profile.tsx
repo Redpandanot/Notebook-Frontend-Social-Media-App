@@ -5,7 +5,7 @@ import { BASE_URL } from "../utils/constants";
 import axios from "axios";
 import UploadImages from "../components/UploadImages/UploadImages";
 import { handleVisitProfile } from "../utils/handleVisitProfile";
-import { ProfileDetail } from "../Types/type";
+import { Post, ProfileDetail } from "../Types/type";
 import { useAppSelector } from "../store/hooks";
 import ProfilePostSkeleton from "../components/Skeleton/ProfilePostSkeleton";
 
@@ -163,7 +163,9 @@ const Profile = () => {
           {postLoading ? (
             <span className="loading loading-ring loading-xl m-auto"></span>
           ) : null}
-          {posts.length !== 0 && <Posts feed={posts} />}
+          {posts.map((post: Post) => {
+            return <Posts key={post._id} postObject={post} />;
+          })}
         </div>
       </div>
       <div></div>
