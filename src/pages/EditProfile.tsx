@@ -32,6 +32,7 @@ const EditProfile = () => {
 
   const handleProfileUpdate = async () => {
     if (!profileState || !profile) return;
+    //@ts-ignore
     const {
       id,
       photo,
