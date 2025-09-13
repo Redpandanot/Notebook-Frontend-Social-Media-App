@@ -28,21 +28,14 @@ const RequestList = () => {
   };
 
   const handleConnection = async (requestId: string, status: string) => {
-    try {
-      const response = await axios.post(
-        BASE_URL + "/friend-requests/review/" + status + "/" + requestId,
-        null,
-        {
-          withCredentials: true,
-        }
-      );
-      setRequests((prevRequests) =>
-        prevRequests.filter((request) => request._id !== requestId)
-      );
-      console.log(response.data);
-    } catch (error) {
-      window.alert(error);
-    }
+    const response = await axios.post(
+      BASE_URL + "/friend-requests/review/" + status + "/" + requestId,
+      null,
+      {
+        withCredentials: true,
+      }
+    );
+    return response.data;
   };
 
   const {

@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { BASE_URL } from "../../utils/constants";
 import { OutletType, User } from "../../Types/type";
 import Card from "./Card";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
 import { useOutletContext } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
 import ProfileCardSkeleton from "../Skeleton/ProfileCardSkeleton";
@@ -51,35 +51,28 @@ const NewFriends = () => {
   });
 
   const handleConnect = async (requestId: string) => {
-    try {
-      const response = await axios.post(
-        BASE_URL + "/friend-request/send/requested/" + requestId,
-        null,
-        { withCredentials: true }
-      );
-      console.log(response.data);
-      setNewRequests((prev) => {
-        return prev.filter((item) => item._id !== requestId);
-      });
-    } catch (error) {
-      window.alert(error);
-    }
+    const response = await axios.post(
+      BASE_URL + "/friend-request/send/requested/" + requestId,
+      null,
+      { withCredentials: true }
+    );
+    return response.data;
   };
 
   const handleFollow = async (requestId: string) => {
-    try {
-      const response = await axios.post(
-        BASE_URL + "/follow/" + requestId,
-        null,
-        {
-          withCredentials: true,
-        }
-      );
-      console.log(response.data);
-    } catch (error) {
-      window.alert(error);
-    }
+    const response = await axios.post(BASE_URL + "/follow/" + requestId, null, {
+      withCredentials: true,
+    });
+    return response.data;
   };
+
+  const followMutation = useMutation({
+    mutationFn: handleFollow,
+  });
+
+  const connectMutation = useMutation({
+    mutationFn: handleConnect,
+  });
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
@@ -120,7 +113,7 @@ const NewFriends = () => {
                   <div className="card-actions">
                     <button
                       className="btn btn-primary"
-                      onClick={() => handleConnect(request._id)}
+                      onClick={() => connectMutation.mutate(request._id)}
                     >
                       Connect
                     </button>
@@ -128,7 +121,7 @@ const NewFriends = () => {
                   <div className="card-actions">
                     <button
                       className="btn btn-primary"
-                      onClick={() => handleFollow(request._id)}
+                      onClick={() => followMutation.mutate(request._id)}
                     >
                       Follow
                     </button>

@@ -26,11 +26,6 @@ const Posts: React.FC<PostListProp> = ({
         withCredentials: true,
       }
     );
-
-    setPost((prevPost) => {
-      return { ...prevPost, likeCount: response.data.likeCount };
-    });
-
     return response.data;
   };
 

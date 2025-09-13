@@ -3,8 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
 import { useEffect, useState } from "react";
 import Card from "./FriendAndRequest/Card";
-import Comments from "./Comments";
 import Posts from "./Posts/Posts";
+import { Comments, Post, ProfileDetail } from "../Types/type";
 
 const Search = () => {
   const { query } = useParams();
@@ -67,8 +67,8 @@ const Search = () => {
         {tabData.length === 0 ? (
           <div>No data with this query. Try different keywords</div>
         ) : (
-          tabData.map((item) => {
-            if (tabSelected === "userList") {
+          tabData.map((item: ProfileDetail | Comments | Post) => {
+            if (tabSelected === "userList" && "firstName" in item) {
               return (
                 <div key={item._id} className="m-10">
                   <Card
@@ -79,7 +79,7 @@ const Search = () => {
                   />
                 </div>
               );
-            } else if (tabSelected === "commentList") {
+            } else if (tabSelected === "commentList" && "comment" in item) {
               return (
                 <div
                   key={item._id}
@@ -101,10 +101,12 @@ const Search = () => {
                   <h4>{item.comment}</h4>
                 </div>
               );
-            } else if (tabSelected === "postList") {
+            } else if (tabSelected === "postList" && "title" in item) {
               return (
                 <div key={item._id}>
-                  <Posts feed={tabData} />
+                  {tabData.map((post) => (
+                    <Posts postObject={post} />
+                  ))}
                 </div>
               );
             }

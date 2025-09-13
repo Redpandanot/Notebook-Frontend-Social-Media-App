@@ -32,24 +32,20 @@ const EditProfile = () => {
 
   const handleProfileUpdate = async () => {
     if (!profileState || !profile) return;
-    //@ts-ignore
-    const {
-      id,
-      photo,
-      skills,
-      createdAt,
-      updatedAt,
-      emailId,
-      ...newProfileState
-    } = profileState;
 
-    const editedState = {};
+    const excludeFields = [
+      "_id",
+      "photo",
+      "skills",
+      "createdAt",
+      "updatedAt",
+      "emailId",
+    ];
+    const editedState: Partial<Record<keyof ProfileDetail, unknown>> = {};
 
-    for (const key in newProfileState) {
-      //@ts-ignore
-      if (profile[key] !== newProfileState[key]) {
-        //@ts-ignore
-        editedState[key] = newProfileState[key];
+    for (const key of Object.keys(profileState) as (keyof ProfileDetail)[]) {
+      if (!excludeFields.includes(key) && profile[key] !== profileState[key]) {
+        editedState[key] = profileState[key];
       }
     }
     try {
