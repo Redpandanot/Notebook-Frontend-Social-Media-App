@@ -4,8 +4,6 @@ import { BASE_URL } from "../utils/constants.ts";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addUser } from "../store/slices/profileSlice.ts";
-// import { checkAndFetchProfile } from "../api/checkAndFetchProfile.ts";
-// import { useAppSelector } from "../store/hooks.ts";
 
 const Login = () => {
   const [emailId, setEmailId] = useState<string>("");

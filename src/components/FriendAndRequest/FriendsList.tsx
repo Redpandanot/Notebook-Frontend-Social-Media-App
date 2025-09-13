@@ -27,7 +27,7 @@ const FriendsList = () => {
         withCredentials: true,
       }
     );
-    return response.data;
+    return response.data.friends;
   };
 
   const {

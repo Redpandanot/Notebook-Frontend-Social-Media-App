@@ -27,7 +27,7 @@ const Profile = () => {
             withCredentials: true,
           }
         );
-        setPosts(result.data);
+        setPosts(result.data.posts);
         setPostLoading(false);
       } catch (error) {
         setPostLoading(false);

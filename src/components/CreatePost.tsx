@@ -25,30 +25,11 @@ const CreatePost = ({ handlePostCreation }: UploadImagesProps) => {
         return;
       }
 
-      setFile((prevFiles) => [...prevFiles, ...newlySelectedFiles]);
+      const updatedFiles = [...file, ...newlySelectedFiles];
+      setFile(updatedFiles);
 
-      const newImagePreviewUrls: string[] = [];
-
-      const selectedFiles = [...file, ...newlySelectedFiles];
-
-      let filesProcessedCount = 0;
-
-      selectedFiles.forEach((file) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-
-        reader.onloadend = () => {
-          // When a file is loaded, add its Data URL to the temporary array
-          newImagePreviewUrls.push(reader.result as string);
-          filesProcessedCount++;
-
-          // Check if all files have been processed
-          if (filesProcessedCount === selectedFiles.length) {
-            // Once all files are loaded, update the state with all Data URLs
-            setImagePreviewUrl(newImagePreviewUrls);
-          }
-        };
-      });
+      const previews = updatedFiles.map((file) => URL.createObjectURL(file));
+      setImagePreviewUrl(previews);
     } else {
       setFile([]);
       setImagePreviewUrl([]);
@@ -56,6 +37,7 @@ const CreatePost = ({ handlePostCreation }: UploadImagesProps) => {
   };
 
   const handleClear = () => {
+    imagePreviewUrl.forEach((url) => URL.revokeObjectURL(url)); // cleanup
     setFile([]);
     setImagePreviewUrl([]);
     // Reset the file input value to allow selecting the same file again
@@ -124,10 +106,12 @@ const CreatePost = ({ handlePostCreation }: UploadImagesProps) => {
           </fieldset>
         </div>
         <div className="flex mb-10">
-          {(title.length < 3 ||
+          {!(
+            title.length < 3 ||
             title.length > 75 ||
             description.length < 3 ||
-            description.length > 75) && (
+            description.length > 75
+          ) && (
             <button
               className="btn btn-sm mt-3 mr-3"
               onClick={() => {
