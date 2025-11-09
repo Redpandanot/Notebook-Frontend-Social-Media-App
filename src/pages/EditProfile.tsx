@@ -17,14 +17,9 @@ const EditProfile = () => {
     const formData = new FormData();
     formData.append("file", file);
     try {
-      const response = await axios.post(
-        BASE_URL + "/profile/addImage",
-        formData,
-        {
-          withCredentials: true,
-        }
-      );
-      console.log(response.data);
+      await axios.post(BASE_URL + "/profile/addImage", formData, {
+        withCredentials: true,
+      });
     } catch (error) {
       window.alert(error);
     }
@@ -84,9 +79,9 @@ const EditProfile = () => {
                     className="rounded-xl"
                   />
                 </figure>
-                {/* {editProfile && (
-                <UploadImages handleImage={handleUpdateProfileImage} />
-              )} */}
+                {editProfile && (
+                  <UploadImages handleImage={handleUpdateProfileImage} />
+                )}
                 <button
                   className="btn btn-primary mt-3 w-40 m-auto"
                   onClick={() => setEditProfile(!editProfile)}
@@ -167,7 +162,7 @@ const EditProfile = () => {
                       if (prev) {
                         return {
                           ...prev,
-                          firstName: e.target.value,
+                          firstName: e.target.value.trim(),
                         };
                       }
                       return null;
@@ -186,7 +181,7 @@ const EditProfile = () => {
                       if (prev) {
                         return {
                           ...prev,
-                          lastName: e.target.value,
+                          lastName: e.target.value.trim(),
                         };
                       }
                       return null;
@@ -224,7 +219,7 @@ const EditProfile = () => {
                       if (prev) {
                         return {
                           ...prev,
-                          college: e.target.value,
+                          college: e.target.value.trim(),
                         };
                       }
                       return null;
@@ -243,7 +238,7 @@ const EditProfile = () => {
                       if (prev) {
                         return {
                           ...prev,
-                          about: e.target.value,
+                          about: e.target.value.trim(),
                         };
                       }
                       return null;

@@ -1,15 +1,20 @@
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { BASE_URL } from "../../utils/constants";
-import { OutletType, User } from "../../Types/type";
+import { OutletType, ProfileDetail } from "../../Types/type";
 import Card from "./Card";
 import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
 import { useOutletContext } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
 import ProfileCardSkeleton from "../Skeleton/ProfileCardSkeleton";
+import { ConnectionAction } from "../../utils/constants";
 
 const NewFriends = () => {
   const { mainScrollRef } = useOutletContext<OutletType>();
+
+  const [clicked, setClicked] = useState<
+    { id: string; action: ConnectionAction }[]
+  >([]);
 
   const [ref, inView] = useInView({
     root: mainScrollRef?.current,
@@ -17,16 +22,13 @@ const NewFriends = () => {
     threshold: 0,
   });
 
-  const LIMIT = 10;
+  const LIMIT = 3;
 
   const fetchNewFriends = async ({ pageParam = 1 }) => {
     const result = await axios.get(
-      BASE_URL + `/new-friends?limit${LIMIT}&page=${pageParam}`,
-      {
-        withCredentials: true,
-      }
+      BASE_URL + `/new-friends?limit=${LIMIT}&page=${pageParam}`,
+      { withCredentials: true }
     );
-
     return result.data;
   };
 
@@ -50,28 +52,46 @@ const NewFriends = () => {
     refetchOnWindowFocus: false,
   });
 
-  const handleConnect = async (requestId: string) => {
+  const handleConnect = async (userId: string) => {
     const response = await axios.post(
-      BASE_URL + "/friend-request/send/requested/" + requestId,
+      BASE_URL + "/friend-request/send/requested/" + userId,
       null,
       { withCredentials: true }
     );
     return response.data;
   };
 
-  const handleFollow = async (requestId: string) => {
-    const response = await axios.post(BASE_URL + "/follow/" + requestId, null, {
+  const handleFollow = async (userId: string) => {
+    const response = await axios.post(BASE_URL + "/follow/" + userId, null, {
       withCredentials: true,
     });
     return response.data;
   };
 
-  const followMutation = useMutation({
-    mutationFn: handleFollow,
-  });
-
   const connectMutation = useMutation({
     mutationFn: handleConnect,
+    onMutate: (userId: string) => {
+      setClicked((prev) => [
+        ...prev,
+        { id: userId, action: ConnectionAction.Connect },
+      ]);
+    },
+    onError: (_err, userId) => {
+      setClicked((prev) => prev.filter((c) => c.id !== userId));
+    },
+  });
+
+  const followMutation = useMutation({
+    mutationFn: handleFollow,
+    onMutate: (userId: string) => {
+      setClicked((prev) => [
+        ...prev,
+        { id: userId, action: ConnectionAction.Follow },
+      ]);
+    },
+    onError: (_err, userId) => {
+      setClicked((prev) => prev.filter((c) => c.id !== userId));
+    },
   });
 
   useEffect(() => {
@@ -95,43 +115,49 @@ const NewFriends = () => {
   return (
     <div className="flex flex-col items-center">
       <h1 className="text font-bold mb-1">Find New Friends</h1>
-      {data?.pages.map((page) => {
-        return page.map((request: User) => {
-          return (
-            <div
-              key={request._id}
-              className="card bg-base-100 w-72 shadow-sm max-[1150px]:hidden block mb-3"
-            >
-              <div className="card-body">
-                <Card
-                  _id={request._id}
-                  firstName={request.firstName}
-                  lastName={request.lastName}
-                  photo={request.photo}
-                />
-                <div className="flex gap-5">
-                  <div className="card-actions">
-                    <button
-                      className="btn btn-primary"
-                      onClick={() => connectMutation.mutate(request._id)}
-                    >
-                      Connect
-                    </button>
-                  </div>
-                  <div className="card-actions">
-                    <button
-                      className="btn btn-primary"
-                      onClick={() => followMutation.mutate(request._id)}
-                    >
-                      Follow
-                    </button>
-                  </div>
-                </div>
+      {data?.pages.map((page) =>
+        page.map((user: ProfileDetail) => (
+          <div
+            key={user._id}
+            className="card bg-base-100 w-72 max-[1150px]:hidden block shadow-sm mb-3"
+          >
+            <div className="card-body">
+              <Card
+                _id={user._id}
+                firstName={user.firstName}
+                lastName={user.lastName}
+                photo={user.photo}
+              />
+              <div className="flex gap-5">
+                <button
+                  className="btn btn-primary"
+                  onClick={() => connectMutation.mutate(user._id)}
+                  disabled={clicked.some(
+                    (c) =>
+                      c.id === user._id && c.action === ConnectionAction.Connect
+                  )}
+                >
+                  Connect
+                </button>
+
+                <button
+                  className="btn btn-primary"
+                  onClick={() => followMutation.mutate(user._id)}
+                  disabled={
+                    clicked.some(
+                      (c) =>
+                        c.id === user._id &&
+                        c.action === ConnectionAction.Follow
+                    ) || user.isFollowing
+                  }
+                >
+                  Follow
+                </button>
               </div>
             </div>
-          );
-        });
-      })}
+          </div>
+        ))
+      )}
       {hasNextPage ? (
         <button ref={ref} className="btn w-30" onClick={() => fetchNextPage()}>
           {isFetchingNextPage ? (

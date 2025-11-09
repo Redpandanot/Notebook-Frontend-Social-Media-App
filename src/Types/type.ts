@@ -53,6 +53,8 @@ export interface ProfileDetail {
   photo: PhotoObject;
   about: string;
   skills: string[];
+  isFriend: boolean;
+  isFollowing: boolean;
   createdAt: string;
   updatedAt: string;
 }

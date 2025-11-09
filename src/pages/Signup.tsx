@@ -7,6 +7,7 @@ import { addUser } from "../store/slices/profileSlice";
 
 const Signup = () => {
   const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
   const [emailId, setEmailId] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [verifyPassword, setVerifyPassword] = useState<string>("");
@@ -14,23 +15,33 @@ const Signup = () => {
   const dispatch = useDispatch();
 
   const handleSignup = async () => {
-    if (password !== verifyPassword) return;
+    if (password !== verifyPassword || firstName.length < 3) return;
     const passwordPattern =
       /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z\d]).{8,}$/;
 
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-    if (!passwordPattern.test(password) || !emailPattern.test(emailId)) return;
+    const namePattern = /^[\p{L}][\p{L}' -]{2,29}$/u;
+
+    if (
+      !passwordPattern.test(password) ||
+      !emailPattern.test(emailId) ||
+      namePattern.test(firstName) ||
+      (lastName.length > 0 && namePattern.test(lastName))
+    )
+      return;
     try {
       const result = await axios.post(BASE_URL + "/signup", {
         firstName,
+        lastName,
         emailId,
         password,
       });
       dispatch(addUser(result.data));
-      navigate("/");
+      window.alert("Signed up successfully: Please login");
+      navigate("/login");
     } catch (error) {
-      window.alert("Signup failed " + error);
+      window.alert("Signup failed " + error.response.data.error);
     }
   };
   return (
@@ -47,12 +58,32 @@ const Signup = () => {
             <label className="input validator">
               <input
                 type="text"
-                placeholder="John Doe"
+                placeholder="John"
                 required
-                onChange={(e) => setFirstName(e.target.value)}
+                onChange={(e) => setFirstName(e.target.value.trim())}
+                pattern="[A-Za-z][A-Za-z' -]{2,29}"
+                minLength={3}
+                maxLength={30}
+                title="Only letters, spaces, apostrophes, and hyphens are allowed."
+                lang="en"
+                inputMode="text"
               />
             </label>
-            <div className="validator-hint hidden">Enter First Name</div>
+            <div className="validator-hint hidden">
+              Should be greater than 3 Characters
+            </div>
+          </div>
+
+          <div>
+            <label className="input validator">
+              <input
+                type="text"
+                placeholder="Doe"
+                required
+                maxLength={30}
+                onChange={(e) => setLastName(e.target.value.trim())}
+              />
+            </label>
           </div>
           <div>
             <label className="input validator">

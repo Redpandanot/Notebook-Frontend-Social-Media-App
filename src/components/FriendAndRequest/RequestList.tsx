@@ -1,15 +1,23 @@
 import axios from "axios";
-import { useEffect } from "react";
-import { BASE_URL } from "../../utils/constants";
+import { useEffect, useState } from "react";
+import { BASE_URL, FriendRequestStatus } from "../../utils/constants";
 import { FriendRequest, OutletType } from "../../Types/type";
 import Card from "./Card";
 import { useOutletContext } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import ProfileCardSkeleton from "../Skeleton/ProfileCardSkeleton";
 
 const RequestList = () => {
+  const [clicked, setClicked] = useState<
+    { id: string; status: FriendRequestStatus }[]
+  >([]);
   const { mainScrollRef } = useOutletContext<OutletType>();
+  const queryClient = useQueryClient();
 
   const [ref, inView] = useInView({
     root: mainScrollRef?.current,
@@ -27,7 +35,13 @@ const RequestList = () => {
     return result.data;
   };
 
-  const handleConnection = async (requestId: string, status: string) => {
+  const handleConnection = async ({
+    requestId,
+    status,
+  }: {
+    requestId: string;
+    status: string;
+  }) => {
     const response = await axios.post(
       BASE_URL + "/friend-requests/review/" + status + "/" + requestId,
       null,
@@ -57,6 +71,52 @@ const RequestList = () => {
     },
     refetchOnWindowFocus: false,
   });
+
+  const friendRequestMutation = useMutation({
+    mutationFn: handleConnection,
+    onMutate: async ({
+      requestId,
+      status,
+    }: {
+      requestId: string;
+      status: FriendRequestStatus;
+    }) => {
+      await queryClient.cancelQueries({ queryKey: ["friendRequests"] });
+
+      const previousData = queryClient.getQueryData(["friendRequests"]);
+
+      queryClient.setQueryData(["friendRequests"], (oldData: any) => {
+        if (!oldData) return oldData;
+
+        return {
+          ...oldData,
+          pages: oldData.pages.map((page: FriendRequest[]) =>
+            page.map((req) =>
+              req._id === requestId ? { ...req, status } : req
+            )
+          ),
+        };
+      });
+
+      return { previousData };
+    },
+
+    onError: (_err, variables, context) => {
+      if (context?.previousData) {
+        queryClient.setQueryData(["friendRequests"], context.previousData);
+      }
+      setClicked((prev) => prev.filter((c) => c.id !== variables.requestId));
+    },
+    //adding this line will remove the accepted/rejected items
+    // onSettled: () => {
+    //   queryClient.invalidateQueries({ queryKey: ["friendRequests"] });
+    // },
+  });
+
+  const handleClick = (requestId: string, status: FriendRequestStatus) => {
+    setClicked((prev) => [...prev, { id: requestId, status }]);
+    friendRequestMutation.mutate({ requestId, status });
+  };
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
@@ -94,22 +154,25 @@ const RequestList = () => {
                   photo={request.fromUserId.photo}
                 />
                 <div className="flex gap-5">
-                  <div className="card-actions">
-                    <button
-                      className="btn btn-primary"
-                      onClick={() => handleConnection(request._id, "accepted")}
-                    >
-                      Accept
-                    </button>
-                  </div>
-                  <div className="card-actions">
-                    <button
-                      className="btn btn-error"
-                      onClick={() => handleConnection(request._id, "rejected")}
-                    >
-                      Reject
-                    </button>
-                  </div>
+                  <button
+                    className="btn btn-primary"
+                    onClick={() =>
+                      handleClick(request._id, FriendRequestStatus.Accepted)
+                    }
+                    disabled={clicked.some((c) => c.id === request._id)}
+                  >
+                    Accept
+                  </button>
+
+                  <button
+                    className="btn btn-error"
+                    onClick={() =>
+                      handleClick(request._id, FriendRequestStatus.Rejected)
+                    }
+                    disabled={clicked.some((c) => c.id === request._id)}
+                  >
+                    Reject
+                  </button>
                 </div>
               </div>
             </div>
