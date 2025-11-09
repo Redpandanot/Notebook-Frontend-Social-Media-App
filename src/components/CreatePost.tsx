@@ -65,17 +65,16 @@ const CreatePost = ({ handlePostCreation }: UploadImagesProps) => {
             multiple
           />
         </fieldset>
-        {imagePreviewUrl && (
+        {imagePreviewUrl.length > 0 && (
           <div className="mt-4 p-2 border border-base-300 rounded-lg">
-            {imagePreviewUrl.length > 0 &&
-              imagePreviewUrl.map((url, index) => (
-                <img
-                  key={index} // Important for React list rendering
-                  src={url}
-                  alt={`Preview ${index + 1}`}
-                  className="max-w-xs max-h-48 rounded-md shadow-md"
-                />
-              ))}
+            {imagePreviewUrl.map((url, index) => (
+              <img
+                key={index}
+                src={url}
+                alt={`Preview ${index + 1}`}
+                className="max-w-xs max-h-48 rounded-md shadow-md"
+              />
+            ))}
             <button className="btn btn-sm btn-error mt-2" onClick={handleClear}>
               Clear Image
             </button>

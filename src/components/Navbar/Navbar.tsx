@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import useProfileNavigation from "../../hooks/useProfileNavigation";
 import { ProfileDetail } from "../../Types/type";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface NavbarPropType {
   handleSidebarClicked: () => void;
@@ -20,6 +21,8 @@ const Navbar = ({ handleSidebarClicked }: NavbarPropType) => {
   const navigate = useNavigate();
   const profile = useAppSelector((store) => store.profile);
   const { handleNavigateToProfile } = useProfileNavigation();
+
+  const queryClient = useQueryClient();
 
   const handleLogout = () => {
     try {
@@ -190,7 +193,10 @@ const Navbar = ({ handleSidebarClicked }: NavbarPropType) => {
             className="btn btn-ghost btn-circle avatar"
           >
             <div className="w-10 rounded-full">
-              <img alt="Navbar component with Images" src={profile.photo.url} />
+              <img
+                alt="Navbar component with Images"
+                src={profile.photo?.url}
+              />
             </div>
           </div>
           <ul
@@ -205,7 +211,10 @@ const Navbar = ({ handleSidebarClicked }: NavbarPropType) => {
             </li>
             <li
               className="cursor-pointer hover:bg-neutral hover:text-secondary-content rounded-box p-1"
-              onClick={handleLogout}
+              onClick={() => {
+                queryClient.clear();
+                handleLogout();
+              }}
             >
               Logout
             </li>

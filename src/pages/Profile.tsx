@@ -3,7 +3,6 @@ import Posts from "../components/Posts/Posts";
 import { useCallback, useEffect, useState } from "react";
 import { BASE_URL } from "../utils/constants";
 import axios from "axios";
-import UploadImages from "../components/UploadImages/UploadImages";
 import { handleVisitProfile } from "../utils/handleVisitProfile";
 import { Post, ProfileDetail } from "../Types/type";
 import { useAppSelector } from "../store/hooks";
@@ -13,7 +12,6 @@ const Profile = () => {
   const { userId } = useParams();
   const profile = useAppSelector((state) => state.profile);
   const [postLoading, setPostLoading] = useState<boolean>(true);
-  const [editProfile, setEditProfile] = useState<boolean>(false);
   const [user, setUser] = useState<ProfileDetail | null>(null);
   const [posts, setPosts] = useState([]);
 
@@ -41,24 +39,6 @@ const Profile = () => {
     const response = await handleVisitProfile(userId);
     setUser(response.data);
   }, []);
-
-  const handleUpdateProfileImage = async (file: File | null) => {
-    if (!file) return;
-    const formData = new FormData();
-    formData.append("file", file);
-    try {
-      const response = await axios.post(
-        BASE_URL + "/profile/addImage",
-        formData,
-        {
-          withCredentials: true,
-        }
-      );
-      console.log(response.data);
-    } catch (error) {
-      window.alert(error);
-    }
-  };
 
   useEffect(() => {
     if (userId) {
@@ -89,16 +69,21 @@ const Profile = () => {
                     className="rounded-xl"
                   />
                 </figure>
-                {editProfile && (
-                  <UploadImages handleImage={handleUpdateProfileImage} />
-                )}
-                {profile && user._id === profile._id && (
-                  <button
-                    className="btn btn-primary mt-3 w-40 m-auto"
-                    onClick={() => setEditProfile(!editProfile)}
-                  >
-                    {editProfile ? "Cancel" : "Edit Profile Image"}
-                  </button>
+                {profile?._id !== user._id && (
+                  <div className="flex justify-center gap-2">
+                    <button
+                      className="btn btn-primary mt-3 w-30"
+                      // onClick={handleFriendRequest}
+                    >
+                      {user.isFriend ? "Unfriend" : "Add Friend"}
+                    </button>
+                    <button
+                      className="btn btn-primary mt-3 w-30"
+                      // onClick={handleFollowRequest}
+                    >
+                      {user.isFollowing ? "UnFollow" : "Follow"}
+                    </button>
+                  </div>
                 )}
                 <div className="card-body items-start text-center">
                   <h2 className="card-title mb-2">
