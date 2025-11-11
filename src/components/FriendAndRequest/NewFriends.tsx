@@ -103,6 +103,7 @@ const NewFriends = () => {
   if (isLoading) {
     return (
       <div className="mb-10 flex flex-col items-center">
+        <h1 className="text font-bold mb-1">Find New Friends</h1>
         <ProfileCardSkeleton />
       </div>
     );

@@ -28,6 +28,7 @@ const Carousel = ({ photos }: propType) => {
       >
         <img
           src={photos[currImageIndex].url}
+          alt={`Post Image ${currImageIndex + 1}`}
           className="w-full object-contain"
         />
       </div>

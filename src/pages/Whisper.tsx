@@ -42,14 +42,16 @@ const Whisper = () => {
             placeholder="Search"
             className="input input-bordered m-4 mb-4 w-24 md:w-auto"
           /> */}
+          {state && state.toUserId && <div></div>}
           {data.map((chat) => {
             return chat.participants.map((item) => {
               if (profile && item._id !== profile._id) {
                 return (
                   <li
                     key={chat._id}
-                    className={`list-row hover:cursor-pointer hover:opacity-60 ${
-                      item._id === chatId && "bg-secondary-content"
+                    className={`list-row hover:cursor-pointer hover:opacity-70 ${
+                      item._id === chatId &&
+                      "bg-secondary-content text-primary-content"
                     }`}
                     onClick={() => setChatId(item._id)}
                   >
@@ -57,6 +59,7 @@ const Whisper = () => {
                       <img
                         className="size-10 rounded-box"
                         src={item.photo?.url}
+                        alt="Profile Image"
                       />
                     </div>
                     <div>

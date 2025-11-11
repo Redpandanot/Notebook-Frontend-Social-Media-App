@@ -2,8 +2,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { createSocketConnection } from "../../utils/socket";
 import { useAppSelector } from "../../store/hooks";
 import { formatDateHeader } from "../../utils/helperFunctions";
-import { Chat as ChatType } from "../../Types/type";
+import { Chat as ChatType, ProfileDetail } from "../../Types/type";
 import { debounce, throttle } from "lodash";
+import { handleVisitProfile } from "../../utils/handleVisitProfile";
+import { useNavigate } from "react-router-dom";
 
 interface ChatProp {
   toUserId: string;
@@ -14,6 +16,11 @@ const Chat: React.FC<ChatProp> = ({ toUserId }) => {
   const [message, setMessage] = useState<string>();
   const [typingUser, setTypingUser] = useState<boolean>(false);
   const profile = useAppSelector((store) => store.profile);
+  const [toUserDetails, setToUserDetails] = useState<ProfileDetail | null>(
+    null
+  );
+  const navigate = useNavigate();
+
   const socket = useRef<any>(null);
 
   useEffect(() => {
@@ -55,9 +62,19 @@ const Chat: React.FC<ChatProp> = ({ toUserId }) => {
     }
   }, [typingUser]);
 
+  const profileDetails = async (toUserId: string) => {
+    const response = await handleVisitProfile(toUserId);
+    setToUserDetails(response.data);
+  };
+
+  useEffect(() => {
+    profileDetails(toUserId);
+    return () => setToUserDetails(null);
+  }, [toUserId]);
+
   const sendMessage = () => {
     emitStopTyping();
-    if (!message || message.length < 150) {
+    if (!message || message.length > 150) {
       return;
     }
     socket.current.emit("sendMessage", {
@@ -89,17 +106,30 @@ const Chat: React.FC<ChatProp> = ({ toUserId }) => {
     emitStopTyping();
   };
 
-  if (chatHistory.length === 0) {
-    return (
-      <div className="flex flex-col h-[calc(100vh-90px)] border-2">
-        <span className=" m-auto loading loading-infinity loading-xl"></span>
-      </div>
-    );
-  }
+  // if (chatHistory.length === 0) {
+  //   return (
+  //     <div className="flex flex-col h-[calc(100vh-90px)] border-2">
+  //       <span className=" m-auto loading loading-infinity loading-xl"></span>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="flex flex-col h-[calc(100vh-90px)] m-auto border-2">
-      <div className="flex-grow">
+      {toUserDetails && (
+        <div
+          className="avatar cursor-pointer"
+          onClick={() => navigate("/profile/" + toUserDetails._id)}
+        >
+          <div className="w-6 m-3 rounded-full">
+            <img src={toUserDetails.photo.url} alt="Profile Image" />
+          </div>
+          <h2 className="card-title">
+            {toUserDetails.firstName} {toUserDetails.lastName}
+          </h2>
+        </div>
+      )}
+      <div className="flex-grow overflow-y-scroll">
         {chatHistory.map((item, i) => {
           const currentDate = new Date(item.createdAt);
           const prevDate =

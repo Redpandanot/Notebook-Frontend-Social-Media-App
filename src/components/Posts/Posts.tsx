@@ -50,14 +50,14 @@ const Posts: React.FC<PostListProp> = ({
     <>
       <div
         key={post._id}
-        className="card bg-base-100 sm:w-[600px] w-full shadow-sm mb-5"
+        className="card bg-base-100 sm:w-[600px] shadow-sm mb-5"
       >
         <div
           className="avatar cursor-pointer"
           onClick={() => navigate("/profile/" + post.userId._id)}
         >
           <div className="w-6 m-3 rounded-full">
-            <img src={post.userId.photo.url} />
+            <img src={post.userId.photo.url} alt="Profile Image" />
           </div>
           <h2 className="card-title">
             {post.userId.firstName} {post.userId.lastName}
