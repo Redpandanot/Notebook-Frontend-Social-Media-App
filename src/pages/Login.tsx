@@ -8,10 +8,12 @@ import { addUser } from "../store/slices/profileSlice.ts";
 const Login = () => {
   const [emailId, setEmailId] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [loggingIn, setLoggingIn] = useState<boolean>(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleLogin = async (e) => {
+    setLoggingIn(true);
     e.preventDefault();
     try {
       const result = await axios.post(
@@ -28,8 +30,9 @@ const Login = () => {
 
       dispatch(addUser(result.data));
       return navigate("/");
-    } catch {
-      window.alert("Login Failed");
+    } catch (error) {
+      setLoggingIn(false);
+      window.alert("Login Failed : " + error.response.data.error);
     }
   };
 
@@ -106,7 +109,11 @@ const Login = () => {
               </label>
             </div>
             <div className="card-actions justify-center">
-              <button className="btn btn-primary" onClick={handleLogin}>
+              <button
+                className="btn btn-primary"
+                onClick={handleLogin}
+                disabled={loggingIn}
+              >
                 Login
               </button>
             </div>

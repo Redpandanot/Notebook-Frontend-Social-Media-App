@@ -42,7 +42,7 @@ const Home = () => {
           <Navbar handleSidebarClicked={handleSidebarClicked} />
           <div className="flex flex-1 overflow-hidden">
             {sideNavigationMenu && (
-              <div className="w-64 bg-base-200 shadow-xl overflow-y-auto">
+              <div className="w-64 bg-base-200 shadow-xl overflow-y-auto absolute h-[calc(100vh-64px)] z-1">
                 <SidebarMenu handleSidebarClicked={handleSidebarClicked} />
               </div>
             )}

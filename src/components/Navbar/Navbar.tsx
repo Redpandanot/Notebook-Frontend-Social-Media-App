@@ -102,7 +102,7 @@ const Navbar = ({ handleSidebarClicked }: NavbarPropType) => {
           <input
             type="checkbox"
             className="theme-controller"
-            value="synthwave"
+            value="halloween"
           />
 
           {/* sun icon */}
@@ -193,10 +193,7 @@ const Navbar = ({ handleSidebarClicked }: NavbarPropType) => {
             className="btn btn-ghost btn-circle avatar"
           >
             <div className="w-10 rounded-full">
-              <img
-                alt="Navbar component with Images"
-                src={profile.photo?.url}
-              />
+              <img alt="Profile Image" src={profile.photo?.url} />
             </div>
           </div>
           <ul
