@@ -8,6 +8,20 @@ const SidebarMenu = ({ handleSidebarClicked }: SidebarPropType) => {
   const navigate = useNavigate();
   return (
     <ul className="menu bg-base-200 rounded-box w-64 pt-5">
+      <div>
+        <button
+          className="btn btn-ghost text-xl visible md:hidden"
+          onClick={() => {
+            handleSidebarClicked();
+            navigate("/");
+          }}
+        >
+          Notebook
+        </button>
+      </div>
+      {/* <div>
+        <ThemeController />
+      </div> */}
       <li
         onClick={() => {
           handleSidebarClicked();
@@ -15,6 +29,14 @@ const SidebarMenu = ({ handleSidebarClicked }: SidebarPropType) => {
         }}
       >
         <a>Edit Profile</a>
+      </li>
+      <li
+        onClick={() => {
+          handleSidebarClicked();
+          navigate("/");
+        }}
+      >
+        <a>Feed</a>
       </li>
       <li
         onClick={() => {

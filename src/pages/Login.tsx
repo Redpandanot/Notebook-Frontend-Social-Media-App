@@ -12,7 +12,7 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const handleLogin = async (e) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     setLoggingIn(true);
     e.preventDefault();
     try {
@@ -37,16 +37,11 @@ const Login = () => {
   };
 
   return (
-    <div className="flex justify-center items-center mt-24">
-      <div className="card lg:card-side bg-base-100 shadow-sm w-1/2">
-        <figure>
-          <img
-            src="https://img.daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.webp"
-            alt="Album"
-          />
-        </figure>
+    <div className="flex justify-center items-center h-screen">
+      <div className="card lg:card-side bg-base-100 shadow-sm h-1/3">
         <form onSubmit={handleLogin}>
-          <div className="card-body">
+          <div className="card-body text-center">
+            <div className="card-title flex justify-center">Log In</div>
             <div>
               <label className="input">
                 <svg
@@ -111,22 +106,21 @@ const Login = () => {
             <div className="card-actions justify-center">
               <button
                 className="btn btn-primary"
-                onClick={handleLogin}
+                type="submit"
                 disabled={loggingIn}
               >
                 Login
               </button>
             </div>
-
             <div className="card-actions justify-center">
               <p>
                 Don't have an account ?<br />
-                <span
-                  className=" cursor-pointer text-blue-600"
+                <a
+                  className="link link-hover link-info"
                   onClick={() => navigate("/signup")}
                 >
                   Sign Up
-                </span>
+                </a>
               </p>
             </div>
           </div>

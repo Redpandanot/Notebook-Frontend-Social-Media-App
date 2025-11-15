@@ -1,12 +1,18 @@
 import { useParams } from "react-router-dom";
 import Posts from "../components/Posts/Posts";
 import { useCallback, useEffect, useState } from "react";
-import { BASE_URL } from "../utils/constants";
+import { BASE_URL, FriendRequestStatus } from "../utils/constants";
 import axios from "axios";
 import { handleVisitProfile } from "../utils/handleVisitProfile";
 import { Post, ProfileDetail } from "../Types/type";
 import { useAppSelector } from "../store/hooks";
 import ProfilePostSkeleton from "../components/Skeleton/ProfilePostSkeleton";
+import { useMutation } from "@tanstack/react-query";
+
+interface ConnectionStatus {
+  followClicked: boolean;
+  friendClicked: boolean;
+}
 
 const Profile = () => {
   const { userId } = useParams();
@@ -14,6 +20,10 @@ const Profile = () => {
   const [postLoading, setPostLoading] = useState<boolean>(true);
   const [user, setUser] = useState<ProfileDetail | null>(null);
   const [posts, setPosts] = useState([]);
+  const [clicked, setClicked] = useState<ConnectionStatus>({
+    followClicked: false,
+    friendClicked: false,
+  });
 
   const postFetch = useCallback(
     async (profileId: string) => {
@@ -51,6 +61,101 @@ const Profile = () => {
     return () => setPosts([]);
   }, [postFetch, profile, userId, profileFetch]);
 
+  const handleConnect = async (userId: string) => {
+    let response;
+    if (!user?.connectionStatus) {
+      response = await axios.post(
+        BASE_URL + "/friend-request/send/requested/" + userId,
+        null,
+        { withCredentials: true }
+      );
+    } else if (
+      user?.connectionStatus?.status === FriendRequestStatus.Accepted
+    ) {
+      response = await axios.post(BASE_URL + "/unFriend/" + userId, null, {
+        withCredentials: true,
+      });
+    } else if (
+      user?.connectionStatus?.fromUserId === userId &&
+      user?.connectionStatus?.status === FriendRequestStatus.Requested
+    ) {
+      response = await axios.post(
+        BASE_URL +
+          "/friend-requests/review/" +
+          FriendRequestStatus.Accepted +
+          "/" +
+          user?.connectionStatus?._id,
+        null,
+        {
+          withCredentials: true,
+        }
+      );
+    }
+    return response && response.data;
+  };
+
+  const handleFollow = async (userId: string) => {
+    const response = await axios.post(BASE_URL + "/follow/" + userId, null, {
+      withCredentials: true,
+    });
+    return response.data;
+  };
+
+  const connectMutation = useMutation({
+    mutationFn: handleConnect,
+    onMutate: () => {
+      setClicked((prev) => {
+        return {
+          ...prev,
+          friendClicked: true,
+        };
+      });
+    },
+  });
+
+  const followMutation = useMutation({
+    mutationFn: handleFollow,
+    onMutate: () => {
+      setClicked((prev) => {
+        return {
+          ...prev,
+          followClicked: true,
+        };
+      });
+    },
+    onSuccess: () => {
+      setUser((prev) => {
+        return (
+          prev && {
+            ...prev,
+            isFollowing: !prev.isFollowing,
+          }
+        );
+      });
+    },
+    onSettled: () => {
+      setClicked((prev) => {
+        return {
+          ...prev,
+          followClicked: false,
+        };
+      });
+    },
+  });
+
+  const connectionString = (user: ProfileDetail) => {
+    let statusString = "Add Friend";
+
+    if (user?.connectionStatus?.status === FriendRequestStatus.Accepted) {
+      statusString = "Unfriend";
+    } else if (user?.connectionStatus?.fromUserId === user._id) {
+      statusString = "Accept Request";
+    } else if (user?.connectionStatus?.toUserId === user._id) {
+      statusString = "Pending";
+    }
+    return statusString;
+  };
+
   if (!user) {
     return <ProfilePostSkeleton />;
   }
@@ -73,13 +178,26 @@ const Profile = () => {
                   <div className="flex justify-center gap-2">
                     <button
                       className="btn btn-primary mt-3 w-30"
-                      // onClick={handleFriendRequest}
+                      onClick={() => {
+                        if (
+                          !(
+                            user?.connectionStatus?.fromUserId ===
+                              profile?._id &&
+                            user.connectionStatus?.status ===
+                              FriendRequestStatus.Requested
+                          )
+                        ) {
+                          connectMutation.mutate(user._id);
+                        }
+                      }}
+                      disabled={clicked.friendClicked}
                     >
-                      {user.isFriend ? "Unfriend" : "Add Friend"}
+                      {connectionString(user)}
                     </button>
                     <button
                       className="btn btn-primary mt-3 w-30"
-                      // onClick={handleFollowRequest}
+                      onClick={() => followMutation.mutate(user._id)}
+                      disabled={clicked.followClicked}
                     >
                       {user.isFollowing ? "UnFollow" : "Follow"}
                     </button>

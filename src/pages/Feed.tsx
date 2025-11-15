@@ -3,7 +3,7 @@ import Posts from "../components/Posts/Posts";
 import NewFriends from "../components/FriendAndRequest/NewFriends";
 import { BASE_URL } from "../utils/constants";
 import axios from "axios";
-import CreatePost from "../components/CreatePost";
+import CreatePost from "../components/Posts/CreatePost";
 import ProfilePostSkeleton from "../components/Skeleton/ProfilePostSkeleton";
 import { Outlet, useOutlet, useOutletContext } from "react-router-dom";
 import { useInfiniteQuery } from "@tanstack/react-query";
@@ -106,7 +106,7 @@ const Feed = () => {
             <CreatePost handlePostCreation={handleCreatePost} />
           </div>
           <button
-            className="btn btn-primary mb-5 sm:w-[600px] rounded-xl bg-primary"
+            className="btn btn-primary mb-5 rounded-xl bg-primary flex justify-center w-full"
             onClick={() =>
               (
                 document.getElementById("my_modal_1") as HTMLDialogElement

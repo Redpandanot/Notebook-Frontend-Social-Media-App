@@ -7,7 +7,7 @@ export interface User {
 
 export interface FriendRequest {
   _id: string;
-  fromUserId: User;
+  fromUserId: User | string;
   toUserId: string;
   status: "requested" | "accepted" | "rejected";
   createdAt: string;
@@ -53,8 +53,8 @@ export interface ProfileDetail {
   photo: PhotoObject;
   about: string;
   skills: string[];
-  isFriend: boolean;
   isFollowing: boolean;
+  connectionStatus?: FriendRequest;
   createdAt: string;
   updatedAt: string;
 }
@@ -76,6 +76,20 @@ export interface Chat {
   seen: boolean;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface ChatList {
+  _id: string;
+  participants: ProfileDetail[];
+  lastMessage: LastMessage;
+  lastMessageAt: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface LastMessage {
+  text: string;
+  sender: string;
 }
 
 export interface OutletType {
