@@ -45,15 +45,10 @@ const Signup = () => {
     }
   };
   return (
-    <div className="flex justify-center items-center mt-24">
-      <div className="card lg:card-side bg-base-100 shadow-sm w-1/2">
-        <figure>
-          <img
-            src="https://img.daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.webp"
-            alt="Album"
-          />
-        </figure>
-        <div className="card-body">
+    <div className="flex justify-center items-center h-screen">
+      <div className="card lg:card-side bg-base-100 shadow-sm">
+        <div className="card-body text-center">
+          <div className="card-title flex justify-center">Sign Up</div>
           <div>
             <label className="input validator">
               <input
@@ -193,12 +188,12 @@ const Signup = () => {
           <div className="card-actions justify-center">
             <p>
               Have an account ?<br />
-              <span
-                className=" cursor-pointer text-blue-600"
+              <a
+                className="link link-hover link-info"
                 onClick={() => navigate("/login")}
               >
-                LogIn
-              </span>
+                Log In
+              </a>
             </p>
           </div>
         </div>

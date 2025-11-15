@@ -106,14 +106,6 @@ const Chat: React.FC<ChatProp> = ({ toUserId }) => {
     emitStopTyping();
   };
 
-  // if (chatHistory.length === 0) {
-  //   return (
-  //     <div className="flex flex-col h-[calc(100vh-90px)] border-2">
-  //       <span className=" m-auto loading loading-infinity loading-xl"></span>
-  //     </div>
-  //   );
-  // }
-
   return (
     <div className="flex flex-col h-[calc(100vh-90px)] m-auto border-2">
       {toUserDetails && (
@@ -129,7 +121,7 @@ const Chat: React.FC<ChatProp> = ({ toUserId }) => {
           </h2>
         </div>
       )}
-      <div className="flex-grow overflow-y-scroll">
+      <div className="flex-grow overflow-y-auto">
         {chatHistory.map((item, i) => {
           const currentDate = new Date(item.createdAt);
           const prevDate =

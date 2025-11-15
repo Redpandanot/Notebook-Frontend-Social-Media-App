@@ -1,7 +1,7 @@
 export const BASE_URL = "http://localhost:3000";
 
 export enum FriendRequestStatus {
-  Pending = "pending",
+  Requested = "requested",
   Accepted = "accepted",
   Rejected = "rejected",
 }

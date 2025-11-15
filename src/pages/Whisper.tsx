@@ -5,6 +5,8 @@ import { useAppSelector } from "../store/hooks";
 import { useState } from "react";
 import Chat from "../components/Chat/Chat";
 import { useLocation } from "react-router-dom";
+import { ChatList } from "../Types/type";
+import ChatEmpty from "../components/Chat/ChatEmpty";
 
 const Whisper = () => {
   const profile = useAppSelector((state) => state.profile);
@@ -36,14 +38,8 @@ const Whisper = () => {
   return (
     <div className="flex gap-5 ml-10 mt-3 mr-10 mb-3">
       <div className="flex-1">
-        <ul className="list bg-base-100 rounded-box shadow-md">
-          {/* <input
-            type="text"
-            placeholder="Search"
-            className="input input-bordered m-4 mb-4 w-24 md:w-auto"
-          /> */}
-          {state && state.toUserId && <div></div>}
-          {data.map((chat) => {
+        <ul className="list rounded-box shadow-md w-60 md:w-full">
+          {data.map((chat: ChatList) => {
             return chat.participants.map((item) => {
               if (profile && item._id !== profile._id) {
                 return (
@@ -77,7 +73,9 @@ const Whisper = () => {
           })}
         </ul>
       </div>
-      <div className="flex-2">{chatId && <Chat toUserId={chatId} />}</div>
+      <div className="flex-2">
+        {chatId ? <Chat toUserId={chatId} /> : <ChatEmpty />}
+      </div>
     </div>
   );
 };

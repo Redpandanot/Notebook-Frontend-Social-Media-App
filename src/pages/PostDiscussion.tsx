@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { Comments as CommentType, Post } from "../Types/type";
-import Comments from "../components/Comments";
+import Comments from "../components/Discussion/Comments";
 import ProfilePostSkeleton from "../components/Skeleton/ProfilePostSkeleton";
 
 const PostDiscussion = () => {

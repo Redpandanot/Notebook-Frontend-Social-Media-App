@@ -1,5 +1,5 @@
 import { ChangeEvent, useState } from "react";
-import Toast from "./Toast/Toast";
+import Toast from "../Toast/Toast";
 
 type UploadImagesProps = {
   handlePostCreation: (
@@ -51,7 +51,7 @@ const CreatePost = ({ handlePostCreation }: UploadImagesProps) => {
 
   return (
     <dialog id="my_modal_1" className="modal pt-10">
-      <div className="modal-box w-1/2 max-w-5xl flex flex-col items-center">
+      <div className="modal-box lg:w-3/4 max-w-5xl flex flex-col items-center">
         <fieldset className="fieldset">
           <legend className="fieldset-legend">
             Pick an image<label className="label">(Optional)</label>
