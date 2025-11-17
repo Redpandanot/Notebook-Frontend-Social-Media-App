@@ -98,7 +98,7 @@ const Navbar = ({ handleSidebarClicked }: NavbarPropType) => {
         <button className="btn btn-ghost text-xl" onClick={() => navigate("/")}>
           Notebook
         </button>
-        <ThemeController />
+        {/* <ThemeController /> */}
       </div>
       <div className="rounded-2xl">
         <div className="flex gap-2 lg:w-[400px]">
@@ -190,6 +190,9 @@ const Navbar = ({ handleSidebarClicked }: NavbarPropType) => {
               }}
             >
               Logout
+            </li>
+            <li className="flex flex-row items-center p-1 gap-5">
+              Theme <ThemeController />
             </li>
           </ul>
         </div>
