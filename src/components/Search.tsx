@@ -1,10 +1,9 @@
-import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-import { BASE_URL } from "../utils/constants";
 import { useEffect, useState } from "react";
 import Card from "./FriendAndRequest/Card";
 import Posts from "./Posts/Posts";
 import { Comments, Post, ProfileDetail } from "../Types/type";
+import { searchList } from "../api/search";
 
 const Search = () => {
   const { query } = useParams();
@@ -16,15 +15,10 @@ const Search = () => {
   const handleSearchQuery = async (searchQuery: string) => {
     if (searchQuery.length < 3) return;
     try {
-      const response = await axios.get(
-        BASE_URL + "/search/list?query=" + searchQuery,
-        {
-          withCredentials: true,
-        }
-      );
-      setResults(response.data);
+      const result = await searchList(searchQuery);
+      setResults(result);
 
-      const entries = Object.entries(response.data);
+      const entries = Object.entries(result);
       for (const entry of entries) {
         if (entry[1].length > 0) {
           setTabSelected(entry[0]);

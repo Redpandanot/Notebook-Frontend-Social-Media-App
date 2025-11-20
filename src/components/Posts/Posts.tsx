@@ -1,10 +1,9 @@
-import axios from "axios";
-import { BASE_URL } from "../../utils/constants";
 import { Post } from "../../Types/type";
 import { useEffect, useState } from "react";
 import Carousel from "../Carousel";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
+import { updateLike } from "../../api/feed";
 
 interface PostListProp {
   postObject: Post;
@@ -18,19 +17,13 @@ const Posts: React.FC<PostListProp> = ({
   const [post, setPost] = useState<Post>(postObject);
   const navigate = useNavigate();
 
-  const updateLike = async (postId: string) => {
-    const response = await axios.post(
-      BASE_URL + "/posts/like/" + postId,
-      null,
-      {
-        withCredentials: true,
-      }
-    );
-    return response.data;
+  const handleLikeClick = async (postId: string) => {
+    const result = await updateLike(postId);
+    return result;
   };
 
   const mutation = useMutation({
-    mutationFn: updateLike,
+    mutationFn: handleLikeClick,
     onSettled: (data) => {
       setPost((prevPost) => {
         return { ...prevPost, likeCount: data.likeCount };

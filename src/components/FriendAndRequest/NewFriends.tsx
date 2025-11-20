@@ -1,6 +1,5 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
-import { BASE_URL } from "../../utils/constants";
+import { FriendRequestStatus } from "../../utils/constants";
 import { OutletType, ProfileDetail } from "../../Types/type";
 import Card from "./Card";
 import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
@@ -8,6 +7,11 @@ import { useOutletContext } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
 import ProfileCardSkeleton from "../Skeleton/ProfileCardSkeleton";
 import { ConnectionAction } from "../../utils/constants";
+import {
+  fetchNewFriendsListRequest,
+  followRequest,
+  friendRequest,
+} from "../../api/connection";
 
 const NewFriends = () => {
   const { mainScrollRef } = useOutletContext<OutletType>();
@@ -22,14 +26,11 @@ const NewFriends = () => {
     threshold: 0,
   });
 
-  const LIMIT = 3;
+  const limit = 3;
 
   const fetchNewFriends = async ({ pageParam = 1 }) => {
-    const result = await axios.get(
-      BASE_URL + `/new-friends?limit=${LIMIT}&page=${pageParam}`,
-      { withCredentials: true }
-    );
-    return result.data;
+    const result = await fetchNewFriendsListRequest(limit, pageParam);
+    return result;
   };
 
   const {
@@ -44,7 +45,7 @@ const NewFriends = () => {
     queryFn: fetchNewFriends,
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.length === LIMIT) {
+      if (lastPage.length === limit) {
         return allPages.length + 1;
       }
       return undefined;
@@ -53,19 +54,13 @@ const NewFriends = () => {
   });
 
   const handleConnect = async (userId: string) => {
-    const response = await axios.post(
-      BASE_URL + "/friend-request/send/requested/" + userId,
-      null,
-      { withCredentials: true }
-    );
-    return response.data;
+    const result = await friendRequest(FriendRequestStatus.Requested, userId);
+    return result;
   };
 
   const handleFollow = async (userId: string) => {
-    const response = await axios.post(BASE_URL + "/follow/" + userId, null, {
-      withCredentials: true,
-    });
-    return response.data;
+    const result = await followRequest(userId);
+    return result;
   };
 
   const connectMutation = useMutation({

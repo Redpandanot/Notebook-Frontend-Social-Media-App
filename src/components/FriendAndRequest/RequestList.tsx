@@ -1,6 +1,5 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
-import { BASE_URL, FriendRequestStatus } from "../../utils/constants";
+import { FriendRequestStatus } from "../../utils/constants";
 import { FriendRequest, OutletType } from "../../Types/type";
 import Card from "./Card";
 import { useOutletContext } from "react-router-dom";
@@ -11,6 +10,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import ProfileCardSkeleton from "../Skeleton/ProfileCardSkeleton";
+import { friendRequests, reviewFriendRequest } from "../../api/connection";
 
 const RequestList = () => {
   const [clicked, setClicked] = useState<
@@ -25,15 +25,7 @@ const RequestList = () => {
     threshold: 0,
   });
 
-  const LIMIT = 10;
-
-  const friendRequests = async () => {
-    const result = await axios.get(BASE_URL + "/friend-requests/view?limit=3", {
-      withCredentials: true,
-    });
-
-    return result.data;
-  };
+  const limit = 10;
 
   const handleConnection = async ({
     requestId,
@@ -42,14 +34,8 @@ const RequestList = () => {
     requestId: string;
     status: string;
   }) => {
-    const response = await axios.post(
-      BASE_URL + "/friend-requests/review/" + status + "/" + requestId,
-      null,
-      {
-        withCredentials: true,
-      }
-    );
-    return response.data;
+    const result = await reviewFriendRequest(status, requestId);
+    return result;
   };
 
   const {
@@ -64,7 +50,7 @@ const RequestList = () => {
     queryFn: friendRequests,
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.length === LIMIT) {
+      if (lastPage.length === limit) {
         return allPages.length + 1;
       }
       return undefined;
@@ -148,12 +134,14 @@ const RequestList = () => {
               className="card bg-base-100 w-72 shadow-sm mb-3"
             >
               <div className="card-body">
-                <Card
-                  _id={request.fromUserId._id}
-                  firstName={request.fromUserId.firstName}
-                  lastName={request.fromUserId.lastName}
-                  photo={request.fromUserId.photo}
-                />
+                {typeof request.fromUserId !== "string" && (
+                  <Card
+                    _id={request.fromUserId._id}
+                    firstName={request.fromUserId.firstName}
+                    lastName={request.fromUserId.lastName}
+                    photo={request.fromUserId.photo}
+                  />
+                )}
                 <div className="flex gap-5">
                   <button
                     className="btn btn-primary"

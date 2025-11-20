@@ -1,14 +1,13 @@
 import { useEffect } from "react";
 import Posts from "../components/Posts/Posts";
 import NewFriends from "../components/FriendAndRequest/NewFriends";
-import { BASE_URL } from "../utils/constants";
-import axios from "axios";
 import CreatePost from "../components/Posts/CreatePost";
 import ProfilePostSkeleton from "../components/Skeleton/ProfilePostSkeleton";
 import { Outlet, useOutlet, useOutletContext } from "react-router-dom";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
 import { OutletType, Post } from "../Types/type";
+import { createPost, fetchFeed } from "../api/feed";
 
 const Feed = () => {
   const { mainScrollRef } = useOutletContext<OutletType>();
@@ -21,14 +20,10 @@ const Feed = () => {
 
   const outlet = useOutlet();
 
-  const LIMIT = 3;
+  const limit = 3;
 
   const postFetch = async ({ pageParam = 1 }) => {
-    const result = await axios.get(
-      `${BASE_URL}/posts/feed?limit=${LIMIT}&page=${pageParam}`,
-      { withCredentials: true }
-    );
-    return result.data;
+    return await fetchFeed(limit, pageParam);
   };
 
   const {
@@ -43,7 +38,7 @@ const Feed = () => {
     queryFn: postFetch,
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.length === LIMIT) {
+      if (lastPage.length === limit) {
         return allPages.length + 1;
       }
       return undefined;
@@ -76,9 +71,7 @@ const Feed = () => {
     }
     (document.getElementById("my_modal_1") as HTMLDialogElement)?.close();
     try {
-      await axios.post(BASE_URL + "/post/create", formData, {
-        withCredentials: true,
-      });
+      await createPost(formData);
     } catch (error) {
       window.alert(error);
     }
