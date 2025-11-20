@@ -4,8 +4,8 @@ import { useAppSelector } from "../../store/hooks";
 import { formatDateHeader } from "../../utils/helperFunctions";
 import { Chat as ChatType, ProfileDetail } from "../../Types/type";
 import { debounce, throttle } from "lodash";
-import { handleVisitProfile } from "../../utils/handleVisitProfile";
 import { useNavigate } from "react-router-dom";
+import { viewProile } from "../../api/profile";
 
 interface ChatProp {
   toUserId: string;
@@ -63,7 +63,7 @@ const Chat: React.FC<ChatProp> = ({ toUserId }) => {
   }, [typingUser]);
 
   const profileDetails = async (toUserId: string) => {
-    const response = await handleVisitProfile(toUserId);
+    const response = await viewProile(toUserId);
     setToUserDetails(response.data);
   };
 

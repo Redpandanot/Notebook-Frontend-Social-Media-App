@@ -1,11 +1,10 @@
 import { useParams } from "react-router-dom";
 import Posts from "../components/Posts/Posts";
 import { useCallback, useEffect, useState } from "react";
-import axios from "axios";
-import { BASE_URL } from "../utils/constants";
 import { Comments as CommentType, Post } from "../Types/type";
 import Comments from "../components/Discussion/Comments";
 import ProfilePostSkeleton from "../components/Skeleton/ProfilePostSkeleton";
+import { commentRequest, fetchComments, fetchPost } from "../api/feed";
 
 const PostDiscussion = () => {
   const { postId } = useParams();
@@ -22,16 +21,7 @@ const PostDiscussion = () => {
     e.preventDefault();
     if (comment === "") return;
     try {
-      await axios.post(
-        BASE_URL + "/posts/comment/" + postId,
-        {
-          parentId: parentId ? parentId : null,
-          comment,
-        },
-        {
-          withCredentials: true,
-        }
-      );
+      await commentRequest(postId, parentId, comment);
       setAddComment("");
       setParentId("");
       fetchComments(postId);
@@ -41,23 +31,12 @@ const PostDiscussion = () => {
   };
 
   const fetchDiscussion = useCallback(async (postId: string) => {
-    await fetchPosts(postId);
-    await fetchComments(postId);
+    const post = await fetchPost(postId);
+    const comment = await fetchComments(postId);
+
+    setPost(post);
+    setDiscussion(comment);
   }, []);
-
-  const fetchPosts = async (postId: string) => {
-    const post = await axios.get(BASE_URL + "/post/view/" + postId, {
-      withCredentials: true,
-    });
-    setPost(post.data);
-  };
-
-  const fetchComments = async (postId: string) => {
-    const comment = await axios.get(BASE_URL + "/discussion/" + postId, {
-      withCredentials: true,
-    });
-    setDiscussion(comment.data);
-  };
 
   useEffect(() => {
     if (postId) {

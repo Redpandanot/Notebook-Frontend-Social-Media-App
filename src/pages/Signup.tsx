@@ -1,9 +1,8 @@
-import axios from "axios";
 import { useState } from "react";
-import { BASE_URL } from "../utils/constants";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addUser } from "../store/slices/profileSlice";
+import { signup } from "../api/auth";
 
 const Signup = () => {
   const [firstName, setFirstName] = useState<string>("");
@@ -31,13 +30,13 @@ const Signup = () => {
     )
       return;
     try {
-      const result = await axios.post(BASE_URL + "/signup", {
+      const result = await signup({
         firstName,
         lastName,
         emailId,
         password,
       });
-      dispatch(addUser(result.data));
+      dispatch(addUser(result));
       window.alert("Signed up successfully: Please login");
       navigate("/login");
     } catch (error) {

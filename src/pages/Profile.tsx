@@ -1,13 +1,19 @@
 import { useParams } from "react-router-dom";
 import Posts from "../components/Posts/Posts";
 import { useCallback, useEffect, useState } from "react";
-import { BASE_URL, FriendRequestStatus } from "../utils/constants";
-import axios from "axios";
-import { handleVisitProfile } from "../utils/handleVisitProfile";
+import { FriendRequestStatus } from "../utils/constants";
 import { Post, ProfileDetail } from "../Types/type";
 import { useAppSelector } from "../store/hooks";
 import ProfilePostSkeleton from "../components/Skeleton/ProfilePostSkeleton";
 import { useMutation } from "@tanstack/react-query";
+import {
+  followRequest,
+  friendRequest,
+  reviewFriendRequest,
+  unFriendRequest,
+} from "../api/connection";
+import { viewPost } from "../api/feed";
+import { viewProile } from "../api/profile";
 
 interface ConnectionStatus {
   followClicked: boolean;
@@ -29,13 +35,8 @@ const Profile = () => {
     async (profileId: string) => {
       try {
         setPostLoading(true);
-        const result = await axios.get(
-          BASE_URL + "/posts/view/" + profileId + "?limit=10",
-          {
-            withCredentials: true,
-          }
-        );
-        setPosts(result.data.posts);
+        const result = await viewPost(profileId);
+        setPosts(result);
         setPostLoading(false);
       } catch (error) {
         setPostLoading(false);
@@ -46,8 +47,8 @@ const Profile = () => {
   );
 
   const profileFetch = useCallback(async (userId: string) => {
-    const response = await handleVisitProfile(userId);
-    setUser(response.data);
+    const result = await viewProile(userId);
+    setUser(result);
   }, []);
 
   useEffect(() => {
@@ -64,41 +65,21 @@ const Profile = () => {
   const handleConnect = async (userId: string) => {
     let response;
     if (!user?.connectionStatus) {
-      response = await axios.post(
-        BASE_URL + "/friend-request/send/requested/" + userId,
-        null,
-        { withCredentials: true }
-      );
+      response = await friendRequest(FriendRequestStatus.Requested, userId);
     } else if (
       user?.connectionStatus?.status === FriendRequestStatus.Accepted
     ) {
-      response = await axios.post(BASE_URL + "/unFriend/" + userId, null, {
-        withCredentials: true,
-      });
+      response = await unFriendRequest(userId);
     } else if (
       user?.connectionStatus?.fromUserId === userId &&
       user?.connectionStatus?.status === FriendRequestStatus.Requested
     ) {
-      response = await axios.post(
-        BASE_URL +
-          "/friend-requests/review/" +
-          FriendRequestStatus.Accepted +
-          "/" +
-          user?.connectionStatus?._id,
-        null,
-        {
-          withCredentials: true,
-        }
+      response = await reviewFriendRequest(
+        FriendRequestStatus.Accepted,
+        user?.connectionStatus?._id
       );
     }
-    return response && response.data;
-  };
-
-  const handleFollow = async (userId: string) => {
-    const response = await axios.post(BASE_URL + "/follow/" + userId, null, {
-      withCredentials: true,
-    });
-    return response.data;
+    return response;
   };
 
   const connectMutation = useMutation({
@@ -114,7 +95,7 @@ const Profile = () => {
   });
 
   const followMutation = useMutation({
-    mutationFn: handleFollow,
+    mutationFn: followRequest,
     onMutate: () => {
       setClicked((prev) => {
         return {

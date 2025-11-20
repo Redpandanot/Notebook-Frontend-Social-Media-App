@@ -1,12 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-import { BASE_URL } from "../utils/constants";
-import axios from "axios";
 import { useAppSelector } from "../store/hooks";
 import { useState } from "react";
 import Chat from "../components/Chat/Chat";
 import { useLocation } from "react-router-dom";
 import { ChatList } from "../Types/type";
 import ChatEmpty from "../components/Chat/ChatEmpty";
+import { getAllChats } from "../api/chat";
 
 const Whisper = () => {
   const profile = useAppSelector((state) => state.profile);
@@ -14,13 +13,6 @@ const Whisper = () => {
   const [chatId, setChatId] = useState<string>(
     state && state.toUserId ? state.toUserId : ""
   );
-
-  const getAllChats = async () => {
-    const response = await axios.get(BASE_URL + "/allChats?limit=10", {
-      withCredentials: true,
-    });
-    return response.data;
-  };
 
   const { isPending, isError, data, error } = useQuery({
     queryKey: ["getAllChats"],

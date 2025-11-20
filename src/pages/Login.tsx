@@ -1,9 +1,8 @@
 import { useState } from "react";
-import axios from "axios";
-import { BASE_URL } from "../utils/constants.ts";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addUser } from "../store/slices/profileSlice.ts";
+import { login } from "../api/auth.ts";
 
 const Login = () => {
   const [emailId, setEmailId] = useState<string>("");
@@ -19,19 +18,13 @@ const Login = () => {
     setLoggingIn(true);
     e.preventDefault();
     try {
-      const result = await axios.post(
-        BASE_URL + "/login",
-        {
-          emailId,
-          password,
-        },
-        {
-          withCredentials: true,
-        }
-      );
-      console.log(result.data);
+      const result = await login({
+        emailId,
+        password,
+      });
+      console.log(result);
 
-      dispatch(addUser(result.data));
+      dispatch(addUser(result));
       return navigate("/");
     } catch (error) {
       setLoggingIn(false);

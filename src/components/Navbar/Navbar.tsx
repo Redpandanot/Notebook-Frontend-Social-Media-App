@@ -1,5 +1,3 @@
-import axios from "axios";
-import { BASE_URL } from "../../utils/constants";
 import { getProfile, removeUser } from "../../store/slices/profileSlice";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -8,6 +6,8 @@ import useProfileNavigation from "../../hooks/useProfileNavigation";
 import { ProfileDetail } from "../../Types/type";
 import { useQueryClient } from "@tanstack/react-query";
 import ThemeController from "../UtillComponents/ThemeController";
+import { logout } from "../../api/auth";
+import { searchRequest } from "../../api/search";
 
 interface NavbarPropType {
   handleSidebarClicked: () => void;
@@ -25,11 +25,9 @@ const Navbar = ({ handleSidebarClicked }: NavbarPropType) => {
 
   const queryClient = useQueryClient();
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     try {
-      axios.get(BASE_URL + "/logout", {
-        withCredentials: true,
-      });
+      await logout();
       dispatch(removeUser());
       navigate("/login");
     } catch (error) {
@@ -41,13 +39,8 @@ const Navbar = ({ handleSidebarClicked }: NavbarPropType) => {
     if (searchQuery.length === 0) return;
     setLoading(true);
     try {
-      const response = await axios.get(
-        BASE_URL + "/search?query=" + searchQuery,
-        {
-          withCredentials: true,
-        }
-      );
-      setResults(response.data);
+      const response = await searchRequest(searchQuery);
+      setResults(response);
       setLoading(false);
     } catch (error) {
       setLoading(false);

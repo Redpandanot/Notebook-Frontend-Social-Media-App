@@ -1,12 +1,11 @@
 import Card from "../FriendAndRequest/Card";
-import { BASE_URL } from "../../utils/constants";
-import axios from "axios";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import ProfileCardSkeleton from "../Skeleton/ProfileCardSkeleton";
 import { useOutletContext } from "react-router-dom";
 import { Followers, OutletType } from "../../Types/type";
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
+import { followingListRequest } from "../../api/connection";
 
 const FollowingList = () => {
   const { mainScrollRef } = useOutletContext<OutletType>();
@@ -17,16 +16,11 @@ const FollowingList = () => {
     threshold: 0,
   });
 
-  const LIMIT = 10;
+  const limit = 10;
 
   const followingListFetch = async ({ pageParam = 1 }) => {
-    const response = await axios.get(
-      BASE_URL + `/following?limit=${LIMIT}&page=${pageParam}`,
-      {
-        withCredentials: true,
-      }
-    );
-    return response.data;
+    const result = await followingListRequest(limit, pageParam);
+    return result;
   };
 
   const {
@@ -41,7 +35,7 @@ const FollowingList = () => {
     queryFn: followingListFetch,
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.length === LIMIT) {
+      if (lastPage.length === limit) {
         return allPages.length + 1;
       }
       return undefined;

@@ -95,3 +95,15 @@ export interface LastMessage {
 export interface OutletType {
   mainScrollRef: React.RefObject<HTMLDivElement | null> | null;
 }
+
+export interface LoginPayload {
+  emailId: string;
+  password: string;
+}
+
+export interface SignupPayload {
+  firstName: string;
+  lastName: string;
+  emailId: string;
+  password: string;
+}

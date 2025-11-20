@@ -1,5 +1,3 @@
-import axios from "axios";
-import { BASE_URL } from "../../utils/constants";
 import Card from "./Card";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import ProfileCardSkeleton from "../Skeleton/ProfileCardSkeleton";
@@ -7,6 +5,7 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import { OutletType, User } from "../../Types/type";
+import { friendsListRequest } from "../../api/connection";
 
 const FriendsList = () => {
   const navigate = useNavigate();
@@ -18,16 +17,11 @@ const FriendsList = () => {
     threshold: 0,
   });
 
-  const LIMIT = 10;
+  const limit = 10;
 
   const friendsListFetch = async ({ pageParam = 1 }) => {
-    const response = await axios.get(
-      BASE_URL + `/friends-list?limit=${LIMIT}&page=${pageParam}`,
-      {
-        withCredentials: true,
-      }
-    );
-    return response.data.friends;
+    const result = await friendsListRequest(limit, pageParam);
+    return result;
   };
 
   const {
@@ -42,7 +36,7 @@ const FriendsList = () => {
     queryFn: friendsListFetch,
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.length === LIMIT) {
+      if (lastPage.length === limit) {
         return allPages.length + 1;
       }
       return undefined;

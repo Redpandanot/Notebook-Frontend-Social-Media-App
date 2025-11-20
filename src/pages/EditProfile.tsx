@@ -1,9 +1,8 @@
-import axios from "axios";
 import UploadImages from "../components/UploadImages/UploadImages";
 import { useAppSelector } from "../store/hooks";
-import { BASE_URL } from "../utils/constants";
 import { useState } from "react";
 import { ProfileDetail } from "../Types/type";
+import { updateProfile, updateProfileImage } from "../api/profile";
 
 const EditProfile = () => {
   const profile = useAppSelector((state) => state.profile);
@@ -17,9 +16,7 @@ const EditProfile = () => {
     const formData = new FormData();
     formData.append("file", file);
     try {
-      await axios.post(BASE_URL + "/profile/addImage", formData, {
-        withCredentials: true,
-      });
+      await updateProfileImage(formData);
     } catch (error) {
       window.alert(error);
     }
@@ -44,15 +41,7 @@ const EditProfile = () => {
       }
     }
     try {
-      await axios.post(
-        BASE_URL + "/profile/edit",
-        {
-          ...editedState,
-        },
-        {
-          withCredentials: true,
-        }
-      );
+      await updateProfile(editedState);
       setEditProfile(false);
     } catch {
       window.alert("Profile edit failed :(");
