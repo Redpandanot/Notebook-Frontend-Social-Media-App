@@ -63,7 +63,7 @@ const EditProfile = () => {
               <div className="card bg-base-100 w-96 shadow-sm">
                 <figure className="px-10 pt-10">
                   <img
-                    src={profile.photo.url}
+                    src={profile.photo?.url}
                     alt="Profile Avatar"
                     className="rounded-xl"
                   />
@@ -132,7 +132,7 @@ const EditProfile = () => {
             <form className="flex flex-col">
               <figure className="px-10 pt-10 mb-10">
                 <img
-                  src={profileState.photo.url}
+                  src={profileState.photo?.url}
                   alt="Profile Avatar"
                   className="rounded-xl"
                 />

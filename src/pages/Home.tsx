@@ -4,9 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import Navbar from "../components/Navbar/Navbar";
 import { getProfile } from "../store/slices/profileSlice";
-import { checkAndFetchProfile } from "../utils/checkAndFetchProfile";
 import SidebarMenu from "../components/SidebarMenu";
 import ProfilePostSkeleton from "../components/Skeleton/ProfilePostSkeleton";
+import { checkAndFetchProfile } from "../utils/helperFunctions";
 
 const Home = () => {
   const [loading, setLoading] = useState<boolean>(true);

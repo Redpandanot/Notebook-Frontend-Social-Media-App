@@ -32,7 +32,7 @@ const Carousel = ({ photos }: propType) => {
           className="w-full object-contain"
         />
       </div>
-      {photos.length > 1 && (
+      {photos?.length > 1 && (
         <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
           <div
             onClick={handlePreviousImage}

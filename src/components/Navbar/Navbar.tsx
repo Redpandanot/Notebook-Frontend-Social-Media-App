@@ -28,6 +28,7 @@ const Navbar = ({ handleSidebarClicked }: NavbarPropType) => {
   const handleLogout = async () => {
     try {
       await logout();
+      queryClient.clear();
       dispatch(removeUser());
       navigate("/login");
     } catch (error) {
@@ -177,10 +178,7 @@ const Navbar = ({ handleSidebarClicked }: NavbarPropType) => {
             </li>
             <li
               className="cursor-pointer hover:bg-neutral hover:text-secondary-content rounded-box p-1"
-              onClick={() => {
-                queryClient.clear();
-                handleLogout();
-              }}
+              onClick={handleLogout}
             >
               Logout
             </li>

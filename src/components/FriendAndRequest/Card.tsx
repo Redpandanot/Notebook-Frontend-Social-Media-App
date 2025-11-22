@@ -13,8 +13,8 @@ const Card: React.FC<User> = ({ _id, firstName, lastName, photo }) => {
         <img
           alt="Navbar component with Images"
           src={
-            photo && photo.url
-              ? photo.url
+            photo && photo?.url
+              ? photo?.url
               : "https://img.daisyui.com/images/profile/demo/yellingcat@192.webp"
           }
         />

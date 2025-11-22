@@ -6,6 +6,6 @@ export const searchRequest = async (searchQuery: string) => {
 };
 
 export const searchList = async (searchQuery: string) => {
-  const res = await axiosClient.get(`/search/list?query=${searchQuery}`);
+  const res = await axiosClient.get(`/search/all?query=${searchQuery}`);
   return res.data;
 };

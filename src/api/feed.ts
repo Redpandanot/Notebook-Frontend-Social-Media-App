@@ -1,12 +1,12 @@
 import axiosClient from "./client";
 
 export const fetchPost = async (postId: string) => {
-  const res = await axiosClient.get(`/post/view/${postId}`);
+  const res = await axiosClient.get(`/post/${postId}`);
   return res.data;
 };
 
 export const viewPost = async (profileId: string) => {
-  const res = await axiosClient.get("/posts/view/" + profileId + "?limit=10");
+  const res = await axiosClient.get("/posts/" + profileId + "?limit=10");
   return res.data.posts;
 };
 

@@ -7,7 +7,8 @@ import { Outlet, useOutlet, useOutletContext } from "react-router-dom";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
 import { OutletType, Post } from "../Types/type";
-import { createPost, fetchFeed } from "../api/feed";
+import { fetchFeed } from "../api/feed";
+import { handleCreatePost } from "../utils/helperFunctions";
 
 const Feed = () => {
   const { mainScrollRef } = useOutletContext<OutletType>();
@@ -45,37 +46,6 @@ const Feed = () => {
     },
     refetchOnWindowFocus: false,
   });
-
-  const handleCreatePost = async (
-    files: File[],
-    title: string,
-    description: string
-  ) => {
-    if (
-      !title ||
-      !description ||
-      title.length < 3 ||
-      title.length > 75 ||
-      description.length < 3 ||
-      description.length > 75
-    )
-      return;
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("description", description);
-
-    if (files.length > 0) {
-      files.forEach((file) => {
-        formData.append("files", file);
-      });
-    }
-    (document.getElementById("my_modal_1") as HTMLDialogElement)?.close();
-    try {
-      await createPost(formData);
-    } catch (error) {
-      window.alert(error);
-    }
-  };
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {

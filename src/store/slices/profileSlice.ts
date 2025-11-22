@@ -7,7 +7,7 @@ export const getProfile = createAsyncThunk(
   "profile/view",
   async (_, thunkAPI) => {
     try {
-      const result = await axios.get(BASE_URL + "/profile/view", {
+      const result = await axios.get(BASE_URL + "/profile", {
         withCredentials: true,
       });
       return result.data;
