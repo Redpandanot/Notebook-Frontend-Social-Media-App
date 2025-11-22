@@ -39,7 +39,7 @@ const Comments = ({
           <div className="pr-2">
             <img
               className="w-5 rounded-full"
-              src={item.userId.photo.url}
+              src={item.userId.photo?.url}
               alt="Profile Avatar"
             />
           </div>

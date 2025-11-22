@@ -50,7 +50,7 @@ const Posts: React.FC<PostListProp> = ({
           onClick={() => navigate("/profile/" + post.userId._id)}
         >
           <div className="w-6 m-3 rounded-full">
-            <img src={post.userId.photo.url} alt="Profile Image" />
+            <img src={post.userId.photo?.url} alt="Profile Image" />
           </div>
           <h2 className="card-title">
             {post.userId.firstName} {post.userId.lastName}
@@ -58,9 +58,7 @@ const Posts: React.FC<PostListProp> = ({
         </div>
         <div className="divider -mt-2"></div>
         <div className="flex justify-center relative">
-          {post.photos && post.photos.length > 0 && (
-            <Carousel photos={post.photos} />
-          )}
+          {post.photos?.length > 0 && <Carousel photos={post.photos} />}
         </div>
         <div className="card-body" key={post._id}>
           <h2 className="card-title">{post.title}</h2>

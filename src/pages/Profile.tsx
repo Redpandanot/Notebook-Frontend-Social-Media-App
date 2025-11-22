@@ -150,7 +150,7 @@ const Profile = () => {
               <div className="card bg-base-100 w-96 shadow-sm">
                 <figure className="px-10 pt-10">
                   <img
-                    src={user.photo.url}
+                    src={user.photo?.url}
                     alt="Profile Avatar"
                     className="rounded-xl"
                   />

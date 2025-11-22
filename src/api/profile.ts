@@ -1,12 +1,12 @@
 import axiosClient from "./client";
 
 export const viewProile = async (userId: string) => {
-  const res = await axiosClient.get("/profile/view/" + userId);
+  const res = await axiosClient.get("/profile/" + userId);
   return res.data;
 };
 
 export const updateProfileImage = async (formData: FormData) => {
-  const res = await axiosClient.post("/profile/addImage", formData);
+  const res = await axiosClient.post("/profile/image", formData);
   return res.data;
 };
 

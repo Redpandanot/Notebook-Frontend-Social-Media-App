@@ -114,7 +114,7 @@ const Chat: React.FC<ChatProp> = ({ toUserId }) => {
           onClick={() => navigate("/profile/" + toUserDetails._id)}
         >
           <div className="w-6 m-3 rounded-full">
-            <img src={toUserDetails.photo.url} alt="Profile Image" />
+            <img src={toUserDetails.photo?.url} alt="Profile Image" />
           </div>
           <h2 className="card-title">
             {toUserDetails.firstName} {toUserDetails.lastName}
