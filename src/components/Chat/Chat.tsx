@@ -2,10 +2,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { createSocketConnection } from "../../utils/socket";
 import { useAppSelector } from "../../store/hooks";
 import { formatDateHeader } from "../../utils/helperFunctions";
-import { Chat as ChatType, ProfileDetail } from "../../Types/type";
+import { Chat as ChatType } from "../../Types/type";
 import { debounce, throttle } from "lodash";
 import { useNavigate } from "react-router-dom";
-import { viewProile } from "../../api/profile";
+import { useProfile } from "../../hooks/useProfile";
 
 interface ChatProp {
   toUserId: string;
@@ -16,9 +16,7 @@ const Chat: React.FC<ChatProp> = ({ toUserId }) => {
   const [message, setMessage] = useState<string>();
   const [typingUser, setTypingUser] = useState<boolean>(false);
   const profile = useAppSelector((store) => store.profile);
-  const [toUserDetails, setToUserDetails] = useState<ProfileDetail | null>(
-    null
-  );
+
   const navigate = useNavigate();
 
   const socket = useRef<any>(null);
@@ -62,15 +60,7 @@ const Chat: React.FC<ChatProp> = ({ toUserId }) => {
     }
   }, [typingUser]);
 
-  const profileDetails = async (toUserId: string) => {
-    const response = await viewProile(toUserId);
-    setToUserDetails(response.data);
-  };
-
-  useEffect(() => {
-    profileDetails(toUserId);
-    return () => setToUserDetails(null);
-  }, [toUserId]);
+  const { data: toUserDetails } = useProfile(toUserId);
 
   const sendMessage = () => {
     emitStopTyping();

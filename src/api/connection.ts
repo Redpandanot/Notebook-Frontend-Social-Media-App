@@ -61,7 +61,9 @@ export const fetchNewFriendsListRequest = async (
   return res.data;
 };
 
-export const friendRequests = async () => {
-  const res = await axiosClient.get("/friend-requests/view?limit=5");
+export const friendRequests = async (limit: number, pageParam = 1) => {
+  const res = await axiosClient.get(
+    `/friend-requests/view?limit=${limit}&page=${pageParam}`
+  );
   return res.data;
 };

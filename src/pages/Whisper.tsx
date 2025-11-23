@@ -1,11 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
 import { useAppSelector } from "../store/hooks";
 import { useState } from "react";
 import Chat from "../components/Chat/Chat";
 import { useLocation } from "react-router-dom";
 import { ChatList } from "../Types/type";
 import ChatEmpty from "../components/Chat/ChatEmpty";
-import { getAllChats } from "../api/chat";
+import useChatList from "../hooks/useChatList";
 
 const Whisper = () => {
   const profile = useAppSelector((state) => state.profile);
@@ -14,10 +13,7 @@ const Whisper = () => {
     state && state.toUserId ? state.toUserId : ""
   );
 
-  const { isPending, isError, data, error } = useQuery({
-    queryKey: ["getAllChats"],
-    queryFn: getAllChats,
-  });
+  const { isPending, isError, data, error } = useChatList();
 
   if (isPending) {
     return <div className="mb-10 flex flex-col items-center">Loading...</div>;
