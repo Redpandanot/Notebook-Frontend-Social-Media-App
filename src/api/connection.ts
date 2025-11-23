@@ -10,7 +10,7 @@ export const friendRequest = async (action: string, userId: string) => {
 };
 
 export const unFriendRequest = async (userId: string) => {
-  const res = await axiosClient.post(`/unfriend/review/${userId}`, null);
+  const res = await axiosClient.post(`/unfriend/${userId}`, null);
   return res.data;
 };
 
