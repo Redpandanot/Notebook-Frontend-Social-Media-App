@@ -4,11 +4,11 @@ import NewFriends from "../components/FriendAndRequest/NewFriends";
 import CreatePost from "../components/Posts/CreatePost";
 import ProfilePostSkeleton from "../components/Skeleton/ProfilePostSkeleton";
 import { Outlet, useOutlet, useOutletContext } from "react-router-dom";
-import { useInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
 import { OutletType, Post } from "../Types/type";
-import { fetchFeed } from "../api/feed";
 import { handleCreatePost } from "../utils/helperFunctions";
+import useFeed from "../hooks/useFeed";
+import { feedLimit } from "../utils/constants";
 
 const Feed = () => {
   const { mainScrollRef } = useOutletContext<OutletType>();
@@ -21,12 +21,6 @@ const Feed = () => {
 
   const outlet = useOutlet();
 
-  const limit = 3;
-
-  const postFetch = async ({ pageParam = 1 }) => {
-    return await fetchFeed(limit, pageParam);
-  };
-
   const {
     data,
     error,
@@ -34,18 +28,7 @@ const Feed = () => {
     hasNextPage,
     isLoading,
     isFetchingNextPage,
-  } = useInfiniteQuery({
-    queryKey: ["feed"],
-    queryFn: postFetch,
-    initialPageParam: 1,
-    getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.length === limit) {
-        return allPages.length + 1;
-      }
-      return undefined;
-    },
-    refetchOnWindowFocus: false,
-  });
+  } = useFeed(feedLimit);
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {

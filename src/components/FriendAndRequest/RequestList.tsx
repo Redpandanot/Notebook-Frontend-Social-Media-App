@@ -1,16 +1,13 @@
 import { useEffect, useState } from "react";
-import { FriendRequestStatus } from "../../utils/constants";
+import { FriendRequestStatus, listLimit } from "../../utils/constants";
 import { FriendRequest, OutletType } from "../../Types/type";
 import Card from "./Card";
 import { useOutletContext } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
-import {
-  useInfiniteQuery,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import ProfileCardSkeleton from "../Skeleton/ProfileCardSkeleton";
-import { friendRequests, reviewFriendRequest } from "../../api/connection";
+import { reviewFriendRequest } from "../../api/connection";
+import useFriendRequests from "../../hooks/useFriendRequests";
 
 const RequestList = () => {
   const [clicked, setClicked] = useState<
@@ -24,8 +21,6 @@ const RequestList = () => {
     rootMargin: "500px",
     threshold: 0,
   });
-
-  const limit = 10;
 
   const handleConnection = async ({
     requestId,
@@ -45,18 +40,7 @@ const RequestList = () => {
     hasNextPage,
     isLoading,
     isFetchingNextPage,
-  } = useInfiniteQuery({
-    queryKey: ["friendRequests"],
-    queryFn: friendRequests,
-    initialPageParam: 1,
-    getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.length === limit) {
-        return allPages.length + 1;
-      }
-      return undefined;
-    },
-    refetchOnWindowFocus: false,
-  });
+  } = useFriendRequests(listLimit);
 
   const friendRequestMutation = useMutation({
     mutationFn: handleConnection,
@@ -93,10 +77,9 @@ const RequestList = () => {
       }
       setClicked((prev) => prev.filter((c) => c.id !== variables.requestId));
     },
-    //adding this line will remove the accepted/rejected items
-    // onSettled: () => {
-    //   queryClient.invalidateQueries({ queryKey: ["friendRequests"] });
-    // },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["friendRequests"] });
+    },
   });
 
   const handleClick = (requestId: string, status: FriendRequestStatus) => {

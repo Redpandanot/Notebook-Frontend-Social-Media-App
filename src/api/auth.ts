@@ -12,6 +12,6 @@ export const signup = async (payload: SignupPayload) => {
 };
 
 export const logout = async () => {
-  const res = await axiosClient.get("/logout");
+  const res = await axiosClient.post("/logout");
   return res.data;
 };

@@ -1,11 +1,11 @@
 import Card from "./Card";
-import { useInfiniteQuery } from "@tanstack/react-query";
 import ProfileCardSkeleton from "../Skeleton/ProfileCardSkeleton";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import { OutletType, User } from "../../Types/type";
-import { friendsListRequest } from "../../api/connection";
+import useFriendsList from "../../hooks/useFriendsList";
+import { listLimit } from "../../utils/constants";
 
 const FriendsList = () => {
   const navigate = useNavigate();
@@ -17,13 +17,6 @@ const FriendsList = () => {
     threshold: 0,
   });
 
-  const limit = 10;
-
-  const friendsListFetch = async ({ pageParam = 1 }) => {
-    const result = await friendsListRequest(limit, pageParam);
-    return result;
-  };
-
   const {
     data,
     error,
@@ -31,18 +24,7 @@ const FriendsList = () => {
     hasNextPage,
     isLoading,
     isFetchingNextPage,
-  } = useInfiniteQuery({
-    queryKey: ["friends"],
-    queryFn: friendsListFetch,
-    initialPageParam: 1,
-    getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.length === limit) {
-        return allPages.length + 1;
-      }
-      return undefined;
-    },
-    refetchOnWindowFocus: false,
-  });
+  } = useFriendsList(listLimit);
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {

@@ -1,11 +1,11 @@
 import Card from "../FriendAndRequest/Card";
-import { useInfiniteQuery } from "@tanstack/react-query";
 import ProfileCardSkeleton from "../Skeleton/ProfileCardSkeleton";
 import { useOutletContext } from "react-router-dom";
 import { Followers, OutletType } from "../../Types/type";
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
-import { followingListRequest } from "../../api/connection";
+import useFollowing from "../../hooks/useFollowing";
+import { listLimit } from "../../utils/constants";
 
 const FollowingList = () => {
   const { mainScrollRef } = useOutletContext<OutletType>();
@@ -16,13 +16,6 @@ const FollowingList = () => {
     threshold: 0,
   });
 
-  const limit = 10;
-
-  const followingListFetch = async ({ pageParam = 1 }) => {
-    const result = await followingListRequest(limit, pageParam);
-    return result;
-  };
-
   const {
     data,
     error,
@@ -30,18 +23,7 @@ const FollowingList = () => {
     hasNextPage,
     isLoading,
     isFetchingNextPage,
-  } = useInfiniteQuery({
-    queryKey: ["following"],
-    queryFn: followingListFetch,
-    initialPageParam: 1,
-    getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.length === limit) {
-        return allPages.length + 1;
-      }
-      return undefined;
-    },
-    refetchOnWindowFocus: false,
-  });
+  } = useFollowing(listLimit);
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {

@@ -11,3 +11,15 @@ export enum ConnectionAction {
   Connect = "connect",
   Follow = "follow",
 }
+
+export enum QueryKeys {
+  Profile = "profile",
+}
+
+export const listLimit = 10;
+
+export const friendSuggestionsLimit = 3;
+
+export const feedLimit = 3;
+
+export const staleTimeForList = 5 * 60 * 1000;

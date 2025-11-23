@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
-import { FriendRequestStatus } from "../../utils/constants";
+import {
+  FriendRequestStatus,
+  friendSuggestionsLimit,
+} from "../../utils/constants";
 import { OutletType, ProfileDetail } from "../../Types/type";
 import Card from "./Card";
-import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useOutletContext } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
 import ProfileCardSkeleton from "../Skeleton/ProfileCardSkeleton";
 import { ConnectionAction } from "../../utils/constants";
-import {
-  fetchNewFriendsListRequest,
-  followRequest,
-  friendRequest,
-} from "../../api/connection";
+import { followRequest, friendRequest } from "../../api/connection";
+import useFriendSuggestions from "../../hooks/useFriendSuggestions";
 
 const NewFriends = () => {
   const { mainScrollRef } = useOutletContext<OutletType>();
@@ -26,13 +26,6 @@ const NewFriends = () => {
     threshold: 0,
   });
 
-  const limit = 3;
-
-  const fetchNewFriends = async ({ pageParam = 1 }) => {
-    const result = await fetchNewFriendsListRequest(limit, pageParam);
-    return result;
-  };
-
   const {
     data,
     error,
@@ -40,18 +33,7 @@ const NewFriends = () => {
     hasNextPage,
     isLoading,
     isFetchingNextPage,
-  } = useInfiniteQuery({
-    queryKey: ["newFriends"],
-    queryFn: fetchNewFriends,
-    initialPageParam: 1,
-    getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.length === limit) {
-        return allPages.length + 1;
-      }
-      return undefined;
-    },
-    refetchOnWindowFocus: false,
-  });
+  } = useFriendSuggestions(friendSuggestionsLimit);
 
   const handleConnect = async (userId: string) => {
     const result = await friendRequest(FriendRequestStatus.Requested, userId);
