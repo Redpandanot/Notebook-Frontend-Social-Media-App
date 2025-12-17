@@ -13,6 +13,9 @@ const useFeed = (limit: number) => {
       return undefined;
     },
     refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    staleTime: Infinity,
   });
 };
 
