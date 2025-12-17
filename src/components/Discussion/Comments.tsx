@@ -58,12 +58,12 @@ const Comments = ({
           >
             reply
           </button>
-          {item.replies.length > 0 && (
+          {item.replies?.length > 0 && (
             <button
               className="hover:cursor-pointer hover:text-blue-400 underline"
               onClick={toggleCollapse}
             >
-              {item.replies.length} more reply
+              {item.replies?.length} more reply
             </button>
           )}
           {parentId === item._id && (
@@ -89,8 +89,8 @@ const Comments = ({
         </div>
       </div>
       <div className="collapse-content">
-        {item.replies.length > 0 &&
-          item.replies.map((replyItem) => (
+        {item.replies?.length > 0 &&
+          item.replies?.map((replyItem) => (
             <Comments
               key={replyItem._id}
               item={replyItem}

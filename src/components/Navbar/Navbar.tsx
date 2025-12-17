@@ -6,7 +6,7 @@ import useProfileNavigation from "../../hooks/useProfileNavigation";
 import { useQueryClient } from "@tanstack/react-query";
 import ThemeController from "../UtillComponents/ThemeController";
 import { logout } from "../../api/auth";
-import { useSearch } from "../../hooks/useSearch"; // <-- new custom hook
+import { useSearch } from "../../hooks/useSearch";
 
 interface NavbarPropType {
   handleSidebarClicked: () => void;
